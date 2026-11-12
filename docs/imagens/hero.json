@@ -1,0 +1,13 @@
+{
+  "modelo": "Z-Image Turbo (pesos em bf16, conta em fp32)",
+  "torch": "2.14.1+cu126",
+  "diffusers": "0.42.1",
+  "embeds": "hero-g.safetensors",
+  "origem": "hero-g-0033.png",
+  "forca": 0.3,
+  "semente": 33,
+  "largura": 1920,
+  "altura": 1088,
+  "passos": 16,
+  "segundos": 216
+}

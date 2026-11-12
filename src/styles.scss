@@ -1,0 +1,243 @@
+// Tokens do site, do Guia de Design: nogueira e tan no chão, papel e tinta na folha, um acento só.
+// Todo par de texto e fundo aqui tem contraste de pelo menos 4,5:1.
+:root {
+  --chao: #2b2216;
+  --mesa: #3a2d1d;
+  --texto: #e4e2da;
+  --texto-suave: #b8ac9c;
+  --acento: #bda38b;
+  --sobre-acento: #2b2216;
+  --linha: rgb(228 226 218 / 14%);
+
+  --papel: #f3efe6;
+  --papel-sombra: #e4ddcd;
+  --papel-de-fundo: #e4e2da;
+  --tinta: #10202a;
+  --grafite: #5a6168;
+  --picote: #b9b1a1;
+  --carimbo: #9a2f2a;
+
+  --fonte-titulo: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --fonte-texto: 'Onest Variable', 'Segoe UI', system-ui, sans-serif;
+  --fonte-dados: 'Geist Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+  // Ritmo: uma seção por tela, as mesmas margens à esquerda e à direita em toda a página.
+  --nav: 72px;
+  --padt: 120px;
+  --padb: 72px;
+  --gut: 80px;
+  --hpadb: 64px;
+  --raio: 4px;
+  --btn-h: 44px;
+
+  --t-h1: clamp(2.5rem, 5vw, 4.5rem);
+  --t-h2: clamp(1.875rem, 3.34vw, 3rem);
+  --t-lead: 1.25rem;
+  --t-corpo: 1.0625rem;
+  --t-pequeno: 0.875rem;
+
+  color-scheme: dark;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --gut: 48px;
+  }
+}
+
+@media (max-width: 639px) {
+  :root {
+    --nav: 56px;
+    --padt: 96px;
+    --padb: 48px;
+    --gut: 24px;
+    --hpadb: 24px;
+    --t-lead: 1.125rem;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  // O foco do teclado nunca fica escondido sob a barra fixa.
+  scroll-padding-top: calc(var(--nav) + 16px);
+  scrollbar-color: var(--acento) var(--chao);
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--chao);
+  color: var(--texto);
+  font: 400 var(--t-corpo) / 1.6 var(--fonte-texto);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--t-h1);
+  line-height: 1.02;
+}
+
+h2 {
+  font-size: var(--t-h2);
+  line-height: 1.08;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+}
+
+::selection {
+  background: var(--acento);
+  color: var(--sobre-acento);
+}
+
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+}
+
+.lead {
+  max-width: 34em;
+  font-size: var(--t-lead);
+  line-height: 1.5;
+}
+
+// Uma largura só para a barra, todas as seções e o fecho.
+.wrap {
+  width: min(100% - 2 * var(--gut), 1280px);
+  margin-inline: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+}
+
+.section {
+  height: calc(var(--h, 1) * 100svh);
+  padding: var(--padt) 0 var(--padb);
+}
+
+// Um par de botões: o principal é o único preenchido com o acento.
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--btn-h);
+  padding: 0 24px;
+  border: 0;
+  border-radius: var(--raio);
+  font: 500 1rem / 1 var(--fonte-texto);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease-out,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.btn--primary {
+  background: var(--acento);
+  color: var(--sobre-acento);
+}
+
+.btn--secondary {
+  background: rgb(228 226 218 / 10%);
+  color: var(--texto);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+// Links de texto: o sublinhado se desenha da esquerda para a direita.
+.link {
+  background: linear-gradient(currentcolor, currentcolor) no-repeat 0 100% / 0 1px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-size 200ms ease-out;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn--primary:hover {
+    background: color-mix(in srgb, var(--acento) 86%, white);
+  }
+
+  .btn--secondary:hover {
+    background: rgb(228 226 218 / 17%);
+  }
+
+  .link:hover {
+    background-size: 100% 1px;
+  }
+}
+
+.link:focus-visible {
+  background-size: 100% 1px;
+}
+
+// Texto só para leitores de tela.
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Menos movimento: ficam as trocas de cor e opacidade, sai o deslocamento.
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn:hover,
+  .btn:active {
+    transform: none;
+  }
+
+  .link {
+    transition: none;
+  }
+}
+
+// As âncoras de seção caem no topo exato da tela, apesar do respiro reservado para o foco.
+main > section {
+  scroll-margin-top: calc(-1 * (var(--nav) + 16px));
+}

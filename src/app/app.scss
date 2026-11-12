@@ -1,0 +1,8 @@
+:host {
+  // O elemento raiz não entra no layout: barra, conteúdo e fecho são filhos diretos da página.
+  display: contents;
+}
+
+main:focus {
+  outline: none;
+}

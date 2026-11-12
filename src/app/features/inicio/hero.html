@@ -1,0 +1,46 @@
+<div class="wrap">
+  <div class="grid hero__grade">
+    <div class="hero__texto">
+      <h1 id="titulo-hero">O carnê dos seus <em>próximos 12 meses</em></h1>
+      <p class="lead">
+        App de contas para quem recebe salário e parcela no cartão. Cada mês é uma folha com o que
+        entra, o que sai e a sobra. No exemplo, maio de 2027 fecha com R$ 2.680,10.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--primary" [href]="links.comecar">Montar meu carnê</a>
+        <a class="btn btn--secondary" href="#folhas">Ver as folhas</a>
+      </div>
+      <p class="hero__nota">Sem senha de banco. O app não move dinheiro.</p>
+    </div>
+
+    <picture class="hero__midia">
+      <source
+        media="(min-width: 1024px)"
+        type="image/avif"
+        srcset="img/carne-alto-628.avif 628w, img/carne-alto-954.avif 954w"
+        sizes="(min-width: 1440px) 628px, 45vw"
+      />
+      <source
+        media="(min-width: 1024px)"
+        type="image/webp"
+        srcset="img/carne-alto-628.webp 628w, img/carne-alto-954.webp 954w"
+        sizes="(min-width: 1440px) 628px, 45vw"
+      />
+      <source
+        type="image/avif"
+        srcset="img/carne-largo-684.avif 684w, img/carne-largo-1024.avif 1024w"
+        sizes="100vw"
+      />
+      <img
+        src="img/carne-largo-1024.webp"
+        srcset="img/carne-largo-684.webp 684w, img/carne-largo-1024.webp 1024w"
+        sizes="100vw"
+        width="1024"
+        height="768"
+        alt="Carnê de papel creme sobre uma mesa de madeira escura, com o carimbo vermelho Pago e a marca 05/12, ao lado de um lápis"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+  </div>
+</div>

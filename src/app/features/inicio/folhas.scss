@@ -1,0 +1,205 @@
+// Padrão: uma tela, que cresce se o conteúdo pedir (telas pequenas).
+:host {
+  display: block;
+  height: auto;
+  min-height: 100svh;
+}
+
+.folhas__grade {
+  row-gap: 32px;
+}
+
+.folhas__texto {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 16px;
+  align-content: start;
+  justify-items: start;
+}
+
+.folhas__nota {
+  max-width: 30em;
+  min-height: 3.2em;
+  color: var(--texto-suave);
+}
+
+.meses {
+  display: flex;
+  gap: 8px;
+}
+
+.meses__botao {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: transparent;
+  color: var(--texto);
+  font: 500 1rem / 1 var(--fonte-texto);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease-out,
+    transform 160ms ease-out;
+
+  &[aria-pressed='true'] {
+    border-color: var(--texto);
+    background: var(--texto);
+    color: var(--chao);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+@media (hover: hover) {
+  .meses__botao:not([aria-pressed='true']):hover {
+    background: rgb(228 226 218 / 10%);
+  }
+}
+
+// A pilha: a lombada à esquerda e as folhas à direita.
+.folhas__pilha {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 14px minmax(0, 1fr);
+}
+
+.lombada {
+  grid-row: 1 / span 3;
+  border-radius: 3px 0 0 3px;
+  background: repeating-linear-gradient(180deg, var(--papel) 0 3px, var(--papel-sombra) 3px 4px);
+  box-shadow: inset -3px 0 4px rgb(0 0 0 / 18%);
+}
+
+.folha {
+  grid-column: 2;
+}
+
+// Sem JavaScript: as três folhas em sequência, e os controles somem.
+@media (scripting: none) {
+  .folha + .folha {
+    margin-top: 24px;
+  }
+
+  .meses,
+  .folhas__nota {
+    display: none;
+  }
+}
+
+// Com JavaScript: só a folha escolhida aparece. Trocar de mês é um corte seco com fade curto.
+@media (scripting: enabled) {
+  .folha:not(.folha--ativa) {
+    display: none;
+  }
+
+  .folha--ativa {
+    animation: aparecer 100ms ease-out;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+// Em tela larga, texto e folha ficam lado a lado, e a folha encolhe para caber na altura.
+@media (min-width: 900px) {
+  .folhas__texto {
+    grid-column: 1 / span 5;
+  }
+
+  .folhas__pilha {
+    grid-column: 7 / span 6;
+  }
+}
+
+// A cena: a seção tem duas telas, o conteúdo fica preso por `sticky` e as folhas se empilham.
+// Quem gira cada folha é o componente, a partir do progresso da rolagem.
+@mixin cena($raiz) {
+  #{$raiz} {
+    height: 200svh;
+    min-height: 0;
+    padding: 0;
+  }
+
+  #{$raiz} .wrap {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    padding-block: var(--padt) var(--padb);
+  }
+
+  #{$raiz} .folhas__pilha {
+    perspective: 1600px;
+  }
+
+  #{$raiz} .lombada {
+    grid-row: 1;
+  }
+
+  #{$raiz} .folhas__pilha .folha {
+    display: block;
+    grid-area: 1 / 2;
+    transform-origin: left center;
+    animation: none;
+    will-change: transform, opacity;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) and (min-width: 900px) and (min-height: 660px) {
+  @include cena(':host(:not(.folhas--estatica))');
+}
+
+// Quem pediu menos movimento ao sistema pode ligar a cena por conta própria.
+@media (min-width: 900px) and (min-height: 660px) {
+  @include cena(':host(.folhas--ligada:not(.folhas--estatica))');
+}
+
+// As folhas se empilham na ordem do carnê: a primeira por cima.
+.folha:nth-last-child(1) {
+  z-index: 1;
+}
+
+.folha:nth-last-child(2) {
+  z-index: 2;
+}
+
+.folha:nth-last-child(3) {
+  z-index: 3;
+}
+
+// Navegador que ainda não conhece a consulta `scripting`: o mesmo modo de botões, ligado pela
+// classe que o componente põe depois da primeira pintura.
+:host(.folhas--interativa) .folha:not(.folha--ativa) {
+  display: none;
+}
+
+// Entre 900 e 1199 de largura a folha ganha uma coluna a mais, para as linhas não quebrarem.
+@media (min-width: 900px) and (max-width: 1199px) {
+  .folhas__texto {
+    grid-column: 1 / span 4;
+  }
+
+  .folhas__pilha {
+    grid-column: 6 / span 7;
+  }
+}
+
+// Lado a lado, a letra da folha é a maior que cabe na altura da tela e na largura da coluna,
+// para a folha inteira aparecer sem cortar a sobra e sem quebrar as linhas.
+@media (min-width: 900px) {
+  .folhas__pilha {
+    container: pilha / inline-size;
+  }
+
+  .folhas__pilha .folha {
+    font-size: clamp(
+      0.75rem,
+      min(calc((100svh - 12rem) / 38.5), calc((100cqi - 14px) / 31.5)),
+      1rem
+    );
+  }
+}

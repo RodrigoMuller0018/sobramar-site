@@ -1,0 +1,60 @@
+<p class="folha__numero">Folha {{ mes().numero }} de 12</p>
+
+<table>
+  <caption [id]="idDoTitulo()">
+    {{
+      mes().nome
+    }}
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col"><span class="so-leitor">Item</span></th>
+      <th scope="col"><span class="so-leitor">Situação</span></th>
+      <th scope="col"><span class="so-leitor">Valor</span></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="grupo">
+      <th scope="rowgroup" colspan="3">Entra</th>
+    </tr>
+    @for (linha of entra(); track linha.descricao) {
+      <tr>
+        <th scope="row">
+          <span class="descricao">{{ linha.descricao }}</span>
+          <span class="detalhe">{{ linha.detalhe }}</span>
+        </th>
+        <td class="situacao">
+          <span class="so-leitor">{{ linha.situacao }}</span>
+        </td>
+        <td class="valor">{{ linha.valor }}</td>
+      </tr>
+    }
+  </tbody>
+  <tbody>
+    <tr class="grupo">
+      <th scope="rowgroup" colspan="3">Sai</th>
+    </tr>
+    @for (linha of sai(); track linha.descricao) {
+      <tr [class.estimada]="linha.estimada">
+        <th scope="row">
+          <span class="descricao">{{ linha.descricao }}</span>
+          <span class="detalhe">{{ linha.detalhe }}</span>
+        </th>
+        <td class="situacao">
+          @if (linha.carimbada) {
+            <span class="carimbo">Pago</span>
+          } @else {
+            <span class="so-leitor">{{ linha.situacao }}</span>
+          }
+        </td>
+        <td class="valor">{{ linha.valor }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<p class="folha__sobra">
+  <span class="folha__rotulo">Sobram</span>
+  <strong>{{ sobra() }}</strong>
+  <span class="folha__estado">{{ mes().estado }}</span>
+</p>

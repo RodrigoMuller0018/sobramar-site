@@ -1,0 +1,63 @@
+// Fixa, opaca e igual em qualquer altura da rolagem: sem blur, sem encolher, sem esconder.
+:host {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  height: var(--nav);
+  border-bottom: 1px solid var(--linha);
+  background: var(--chao);
+}
+
+.topo__wrap {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 100%;
+}
+
+.marca {
+  margin-right: auto;
+  color: var(--texto);
+  font: italic 400 1.5rem / 1 var(--fonte-titulo);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.topo__nav {
+  display: flex;
+  gap: 24px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+// O atalho de teclado não empurra a marca: só aparece com foco.
+.pular {
+  position: absolute;
+  top: 12px;
+  left: var(--gut);
+  z-index: 1;
+  padding: 8px 12px;
+  border-radius: var(--raio);
+  background: var(--texto);
+  color: var(--chao);
+  clip-path: inset(50%);
+
+  &:focus {
+    clip-path: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .topo__wrap {
+    gap: 12px;
+  }
+
+  .topo__folhas {
+    display: none;
+  }
+
+  .btn {
+    padding: 0 14px;
+    font-size: 0.9375rem;
+  }
+}

@@ -1,0 +1,47 @@
+<div class="wrap">
+  <div class="grid folhas__grade">
+    <div class="folhas__texto">
+      <h2 id="titulo-folhas">Uma folha para cada mês</h2>
+      <p class="lead">
+        Março, abril e maio de 2027 na casa do exemplo: o que entra, o que sai e a sobra, com os
+        centavos.
+      </p>
+      <div class="meses" role="group" aria-label="Escolher o mês">
+        @for (folha of folhas; track folha.id; let indice = $index) {
+          <button
+            type="button"
+            class="meses__botao"
+            [attr.aria-pressed]="ativa() === indice"
+            (click)="mostrar(indice)"
+          >
+            {{ folha.mes.curto }}
+          </button>
+        }
+      </div>
+      <p class="folhas__nota" [attr.aria-live]="naCena() ? 'off' : 'polite'">{{ nota() }}</p>
+      @if (movimento.sistemaReduz()) {
+        <button
+          type="button"
+          class="btn btn--secondary"
+          [attr.aria-pressed]="movimento.ligado()"
+          (click)="movimento.alternar()"
+        >
+          Virar as folhas com a rolagem
+        </button>
+      }
+    </div>
+
+    <div class="folhas__pilha">
+      <span class="lombada" aria-hidden="true"></span>
+      @for (folha of folhas; track folha.id; let indice = $index) {
+        <article
+          app-folha
+          #papel
+          [mes]="folha.mes"
+          [id]="folha.id"
+          [class.folha--ativa]="ativa() === indice"
+        ></article>
+      }
+    </div>
+  </div>
+</div>

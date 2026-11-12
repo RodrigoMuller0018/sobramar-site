@@ -1,0 +1,66 @@
+// Exatamente a primeira tela: nada da seção seguinte aparece ao carregar.
+:host {
+  display: block;
+  height: 100svh;
+  min-height: 34rem;
+  padding: calc(var(--nav) + 48px) 0 var(--hpadb);
+}
+
+.wrap,
+.hero__grade {
+  height: 100%;
+}
+
+.hero__grade {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.hero__texto {
+  display: grid;
+  grid-column: 1 / span 5;
+  gap: 24px;
+  align-content: start;
+  justify-items: start;
+}
+
+h1 em {
+  font-style: italic;
+}
+
+.hero__nota {
+  color: var(--texto-suave);
+  font-size: var(--t-pequeno);
+}
+
+// A foto num quadro alto, do topo do título até o pé da dobra.
+.hero__midia {
+  display: block;
+  grid-column: 7 / span 6;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--raio);
+  background: var(--mesa);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Abaixo de 1024, o texto vem primeiro e a foto ocupa o que sobra da tela.
+@media (max-width: 1023px) {
+  .hero__grade {
+    grid-template-rows: auto minmax(15rem, 1fr);
+    row-gap: 32px;
+  }
+
+  .hero__texto,
+  .hero__midia {
+    grid-column: 1 / -1;
+  }
+
+  .hero__texto {
+    gap: 16px;
+  }
+}

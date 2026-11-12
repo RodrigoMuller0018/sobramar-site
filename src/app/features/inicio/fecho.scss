@@ -1,0 +1,66 @@
+// A página termina em papel: a mesma tinta e o mesmo creme da folha, numa tela inteira.
+:host {
+  --chao: var(--papel-de-fundo);
+  --texto: var(--tinta);
+  --texto-suave: #4c5359;
+  --acento: var(--tinta);
+  --sobre-acento: var(--papel-de-fundo);
+  --linha: rgb(16 32 42 / 16%);
+
+  display: block;
+  min-height: 100svh;
+  padding: var(--padt) 0 var(--padb);
+  background: var(--chao);
+  color: var(--texto);
+  color-scheme: light;
+}
+
+.fecho__wrap {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 48px;
+  min-height: calc(100svh - var(--padt) - var(--padb));
+}
+
+.fecho__chamada {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+  justify-items: start;
+  max-width: 40rem;
+}
+
+.fecho__rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--linha);
+  font-size: var(--t-pequeno);
+}
+
+.marca {
+  color: var(--texto);
+  font: italic 400 1.5rem / 1 var(--fonte-titulo);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.fecho__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-weight: 500;
+}
+
+.fecho__legal {
+  margin-left: auto;
+  color: var(--texto-suave);
+}
+
+@media (max-width: 639px) {
+  .fecho__legal {
+    margin-left: 0;
+  }
+}
