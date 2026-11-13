@@ -31,16 +31,25 @@ describe('App', () => {
   });
 
   it('deve dar o mesmo nome e o mesmo destino à ação principal em toda a página', async () => {
-    const principais = Array.from(
-      (await renderizar()).querySelectorAll<HTMLAnchorElement>('.btn--primary'),
+    const pagina = await renderizar();
+    const acoes = Array.from(pagina.querySelectorAll<HTMLAnchorElement>('a.btn')).filter(
+      (botao) => botao.getAttribute('href') === `${APP}/comecar`,
     );
 
-    expect(principais.map((botao) => botao.textContent)).toEqual([
+    expect(acoes.map((botao) => botao.textContent?.trim())).toEqual([
       'Montar meu carnê',
       'Montar meu carnê',
       'Montar meu carnê',
     ]);
-    expect(principais.every((botao) => botao.getAttribute('href') === `${APP}/comecar`)).toBe(true);
+  });
+
+  it('deve ter um só botão âmbar por tela no alto da página: o da dobra e o do fecho', async () => {
+    const principais = Array.from((await renderizar()).querySelectorAll('.btn--primary'));
+
+    expect(principais.map((botao) => botao.closest('section, footer')?.className)).toEqual([
+      'hero',
+      'closing',
+    ]);
   });
 
   it('deve levar ao login e aos textos legais do app', async () => {

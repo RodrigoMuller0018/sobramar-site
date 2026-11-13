@@ -11,8 +11,18 @@
     />
     <meta name="page-type" content="software" />
     <meta name="site-kind" content="software" />
-    <meta name="theme-color" content="#2b2216" />
+    <meta name="theme-color" content="#0b132b" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <!-- O primeiro quadro do filme da dobra (o mesmo de ativo-do-hero.ts): é o que se vê primeiro na tela larga. -->
+    <link
+      rel="preload"
+      as="image"
+      href="hero/carne-inicio.webp"
+      fetchpriority="high"
+      media="(min-width: 1240px) and (min-aspect-ratio: 3/2) and (prefers-reduced-motion: no-preference)"
+    />
+    <!-- Antes do CSS pintar: decide se a página pode se mexer (escolha guardada ou pedido do sistema). -->
+    <script src="movimento.js"></script>
   </head>
   <body>
     <app-root></app-root>

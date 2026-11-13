@@ -1,0 +1,201 @@
+// O que se mexe na primeira dobra e os dois controles do canto. Os arranjos estão em `hero.scss`.
+
+// --- Controles do canto: repetir a abertura e ligar ou desligar o movimento. ---------------------
+
+.hero__controles {
+  position: absolute;
+  right: max(var(--gut), (100% - var(--largura)) / 2);
+  bottom: 24px;
+  z-index: 1;
+  display: none;
+  gap: 8px;
+  transition: opacity 200ms var(--saida);
+}
+
+// Os controles chegam com o script: surgem em 200 ms, sem estalo.
+@starting-style {
+  .hero__controles {
+    opacity: 0;
+  }
+}
+
+// Fora da tela larga o botão de movimento só aparece para quem precisa dele.
+.palco--pede-controle .hero__controles {
+  display: flex;
+}
+
+.controle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-p);
+  background: color-mix(in srgb, var(--noite) 72%, transparent);
+  color: var(--texto);
+  font: 500 0.875rem / 1 var(--fonte-texto);
+  cursor: pointer;
+  transition:
+    transform 160ms var(--saida),
+    border-color 160ms var(--saida),
+    background-color 160ms var(--saida);
+
+  &:active {
+    border-color: var(--creme);
+    background: var(--noite);
+  }
+}
+
+// O estado se lê na palavra e também na luz: cheia quando ligado, só o contorno quando desligado.
+.controle--movimento::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--texto-suave);
+  border-radius: 50%;
+}
+
+.controle--movimento[aria-pressed='true']::before {
+  border-color: var(--enfase);
+  background: var(--enfase);
+}
+
+@media (hover: hover) {
+  .controle:hover {
+    border-color: var(--creme);
+    background: var(--noite);
+  }
+}
+
+// Na tela larga os dois controles ficam sempre à vista, no canto da dobra.
+@media (min-width: 1240px) and (min-aspect-ratio: 3/2) {
+  .hero__controles {
+    bottom: 28px;
+    display: flex;
+  }
+}
+
+// --- Movimento: só sob `html[data-movimento='ligado']`, que `movimento.js` decide antes da -------
+// --- primeira pintura. Sem ele, o texto e o quadro final já estão prontos. -----------------------
+
+// Sem movimento, a única troca é de opacidade, e curta: desligar o movimento não pode mexer nada.
+.entra {
+  transition: opacity 200ms var(--saida);
+}
+
+@for $i from 1 through 5 {
+  .entra-#{$i} {
+    --i: #{$i - 1};
+  }
+}
+
+:host-context([data-movimento='ligado']) {
+  .controle:active {
+    transform: scale(0.97);
+  }
+
+  // A entrada do texto: opacidade, 18 px de subida e 6 px de desfoque, 900 ms, 90 ms entre itens.
+  .entra {
+    transition:
+      opacity 900ms var(--saida),
+      transform 900ms var(--saida),
+      filter 900ms var(--saida);
+    transition-delay: calc(var(--i) * 90ms);
+  }
+
+  // Profundidade: a cena e o texto seguem o ponteiro devagar. Sem movimento, voltam de uma vez.
+  .hero__texto,
+  .hero__cena {
+    transition: transform 700ms var(--saida);
+  }
+}
+
+// Fora da tela larga a entrada é só CSS e começa com a página: o texto chega em sequência e a
+// imagem assenta. A imagem nunca fica invisível.
+@media not all and (min-width: 1240px) and (min-aspect-ratio: 3/2) {
+  :host-context([data-movimento='ligado']) {
+    // O desfoque anima à parte: junto, ele tiraria a opacidade e a subida do compositor.
+    .entra {
+      animation:
+        chegar 900ms var(--saida) calc(120ms + var(--i) * 90ms) backwards,
+        focar 900ms var(--saida) calc(120ms + var(--i) * 90ms) backwards;
+    }
+
+    // A imagem espera chegar para assentar; até lá fica no ponto de partida.
+    .palco:not(.palco--imagem-pronta) .hero__fim {
+      transform: scale(1.06) translateY(16px);
+    }
+
+    .palco--imagem-pronta .hero__fim {
+      animation: assentar 1400ms var(--saida) backwards;
+    }
+  }
+}
+
+// Na tela larga quem dá o tempo é o filme: o texto espera a folha do mês assentar, e o componente
+// solta a entrada. Se o script não chegar, o texto entra sozinho depois de 4 s.
+@media (min-width: 1240px) and (min-aspect-ratio: 3/2) {
+  :host-context([data-movimento='ligado']) {
+    // Ao repetir a abertura o texto sai só pela opacidade, junto e rápido; a subida e o desfoque
+    // voltam ao ponto de partida depois, já invisíveis.
+    .palco:not(.palco--revelada) .entra {
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(18px);
+      transition:
+        opacity 160ms var(--saida),
+        transform 0s 160ms,
+        filter 0s 160ms;
+    }
+
+    // Quem chega pelo teclado a um botão ainda escondido passa a vê-lo.
+    .palco:not(.palco--revelada) .entra:focus-within {
+      opacity: 1;
+      filter: none;
+      transform: none;
+    }
+
+    .palco:not(.palco--armada) .entra {
+      animation:
+        surgir 900ms var(--saida) calc(4s + var(--i) * 90ms) forwards,
+        desembacar 900ms var(--saida) calc(4s + var(--i) * 90ms) forwards;
+    }
+
+    .palco:not(.palco--parada) .hero__fim {
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes chegar {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes focar {
+  from {
+    filter: blur(6px);
+  }
+}
+
+@keyframes assentar {
+  from {
+    transform: scale(1.06) translateY(16px);
+  }
+}
+
+@keyframes surgir {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes desembacar {
+  to {
+    filter: none;
+  }
+}

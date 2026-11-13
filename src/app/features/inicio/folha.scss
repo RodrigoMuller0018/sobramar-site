@@ -13,14 +13,14 @@
     content: '';
     position: absolute;
     inset: 0 0 auto;
-    border-top: 2px dashed var(--picote);
+    border-top: 2px dashed var(--linha-do-papel);
   }
 }
 
 .folha__numero,
 .folha__rotulo,
 .grupo th {
-  color: var(--grafite);
+  color: var(--lapis);
   font-size: 0.75em;
   font-weight: 500;
   letter-spacing: 0.15em;
@@ -51,7 +51,7 @@ caption {
 
 tbody tr:not(.grupo) > * {
   padding: 0.55em 0;
-  border-bottom: 1px solid var(--picote);
+  border-bottom: 1px solid var(--linha-do-papel);
   vertical-align: baseline;
 }
 
@@ -62,7 +62,7 @@ th[scope='row'] {
 
 .detalhe {
   margin-left: 0.6em;
-  color: var(--grafite);
+  color: var(--lapis);
   font-size: 0.8125em;
   font-weight: 400;
 }
@@ -74,14 +74,13 @@ th[scope='row'] {
 }
 
 .valor {
-  font-family: var(--fonte-dados);
   font-size: 0.9375em;
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
 }
 
-// O carimbo de baixa: contorno vermelho, levemente torto, parado.
+// O carimbo de baixa: contorno marinho, levemente torto, parado.
 .carimbo {
   display: inline-block;
   padding: 0.05em 0.45em;
@@ -95,10 +94,10 @@ th[scope='row'] {
   transform: rotate(var(--inclinacao, -3deg));
 }
 
-// A lápis: o valor estimado em grafite, com o motivo escrito na própria linha.
+// A lápis: o valor estimado em ardósia, com o motivo escrito na própria linha.
 .estimada th,
 .estimada td {
-  color: var(--grafite);
+  color: var(--lapis);
 }
 
 .folha__sobra {
@@ -113,13 +112,13 @@ th[scope='row'] {
 }
 
 .folha__estado {
-  color: var(--grafite);
+  color: var(--lapis);
   font-size: 0.8125em;
 }
 
-// A sobra só fica em tinta quando o mês foi conferido; enquanto houver estimativa, é grafite.
+// A sobra só fica em tinta quando o mês foi conferido; enquanto houver estimativa, é a lápis.
 :host(.folha--a-lapis) .folha__sobra strong {
-  color: var(--grafite);
+  color: var(--lapis);
 }
 
 // Papel estreito (celular): o detalhe desce para a linha de baixo, para o valor nunca sair da folha.

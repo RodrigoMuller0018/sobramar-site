@@ -38,13 +38,13 @@
   font: 500 1rem / 1 var(--fonte-texto);
   cursor: pointer;
   transition:
-    background-color 160ms ease-out,
-    transform 160ms ease-out;
+    background-color 160ms var(--saida),
+    transform 160ms var(--saida);
 
   &[aria-pressed='true'] {
     border-color: var(--texto);
     background: var(--texto);
-    color: var(--chao);
+    color: var(--noite);
   }
 
   &:active {
@@ -54,11 +54,11 @@
 
 @media (hover: hover) {
   .meses__botao:not([aria-pressed='true']):hover {
-    background: rgb(228 226 218 / 10%);
+    background: var(--realce);
   }
 }
 
-// A pilha: a lombada à esquerda e as folhas à direita.
+// A pilha: a lombada à esquerda, com as folhas marinho que estão por baixo, e a folha à direita.
 .folhas__pilha {
   display: grid;
   grid-column: 1 / -1;
@@ -68,7 +68,7 @@
 .lombada {
   grid-row: 1 / span 3;
   border-radius: 3px 0 0 3px;
-  background: repeating-linear-gradient(180deg, var(--papel) 0 3px, var(--papel-sombra) 3px 4px);
+  background: repeating-linear-gradient(180deg, var(--ardosia) 0 3px, var(--marinho) 3px 4px);
   box-shadow: inset -3px 0 4px rgb(0 0 0 / 18%);
 }
 
@@ -149,11 +149,8 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) and (scripting: enabled) and (min-width: 900px) and (min-height: 660px) {
-  @include cena(':host(:not(.folhas--estatica))');
-}
-
-// Quem pediu menos movimento ao sistema pode ligar a cena por conta própria.
+// A cena só existe com movimento: o componente põe `folhas--ligada` quando a página pode se mexer
+// (pedido do sistema ou escolha da pessoa).
 @media (min-width: 900px) and (min-height: 660px) {
   @include cena(':host(.folhas--ligada:not(.folhas--estatica))');
 }

@@ -1,41 +1,77 @@
-// Tokens do site, do Guia de Design: nogueira e tan no chão, papel e tinta na folha, um acento só.
-// Todo par de texto e fundo aqui tem contraste de pelo menos 4,5:1.
+// Reserva com a largura da Instrument Serif. Enquanto ela carrega, os títulos aparecem numa serifa
+// do sistema ajustada para ocupar o mesmo espaço, e a página não pula quando ela chega. A
+// porcentagem foi medida com o texto do site (Georgia é 32 % mais larga).
+@font-face {
+  font-family: 'Reserva da Serifa';
+  src: local('Georgia'), local('Noto Serif');
+  size-adjust: 75.5%;
+}
+
+@font-face {
+  font-family: 'Reserva da Serifa';
+  font-style: italic;
+  src: local('Georgia Italic'), local('Georgia-Italic'), local('Noto Serif Italic');
+  size-adjust: 75.9%;
+}
+
+// Tokens do site, de DESIGN.md: campo noite, creme só como papel da folha e âmbar como única cor de
+// ação. O contraste de cada par de texto e fundo foi calculado (WCAG) e dá pelo menos 4,5:1; os
+// números estão em DESIGN.md.
 :root {
-  --chao: #2b2216;
-  --mesa: #3a2d1d;
-  --texto: #e4e2da;
-  --texto-suave: #b8ac9c;
-  --acento: #bda38b;
-  --sobre-acento: #2b2216;
-  --linha: rgb(228 226 218 / 14%);
+  // A paleta escolhida pelo Rodrigo em 11/11/2026.
+  --noite: #0b132b;
+  --marinho: #1c2541;
+  --ardosia: #3a506b;
+  --ceu: #5bc0de;
+  --creme: #f4d6b0;
+  --ambar: #d97706;
+  --ambar-claro: #e88a1a;
 
-  --papel: #f3efe6;
-  --papel-sombra: #e4ddcd;
-  --papel-de-fundo: #e4e2da;
-  --tinta: #10202a;
-  --grafite: #5a6168;
-  --picote: #b9b1a1;
-  --carimbo: #9a2f2a;
+  // Papéis no campo escuro. Texto sobre âmbar e sobre azul-céu é sempre noite.
+  --campo: var(--noite);
+  --superficie: var(--marinho);
+  --texto: #fbeedc;
+  --texto-suave: #c3cde0;
+  --acao: var(--ambar);
+  --acao-viva: var(--ambar-claro);
+  --sobre-acao: var(--noite);
+  --enfase: var(--ceu);
+  // Creme translúcido: 16 % só separa; 44 % desenha um controle (3:1 sobre a noite).
+  --linha: rgb(244 214 176 / 16%);
+  --borda: rgb(244 214 176 / 44%);
+  --realce: rgb(244 214 176 / 8%);
 
-  --fonte-titulo: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  // Papéis na folha: tinta para o que é certo, lápis para o estimado.
+  --papel: var(--creme);
+  --tinta: var(--noite);
+  --lapis: var(--ardosia);
+  --linha-do-papel: rgb(11 19 43 / 18%);
+  --carimbo: var(--marinho);
+
+  --fonte-titulo: 'Instrument Serif', 'Reserva da Serifa', 'Iowan Old Style', Georgia, serif;
   --fonte-texto: 'Onest Variable', 'Segoe UI', system-ui, sans-serif;
-  --fonte-dados: 'Geist Mono', ui-monospace, 'Cascadia Mono', monospace;
 
   // Ritmo: uma seção por tela, as mesmas margens à esquerda e à direita em toda a página.
   --nav: 72px;
   --padt: 120px;
   --padb: 72px;
   --gut: 80px;
-  --hpadb: 64px;
-  --raio: 4px;
-  --btn-h: 44px;
+  --largura: 1440px;
+  --raio-p: 10px;
+  --raio: 14px;
+  --raio-g: 18px;
+  --btn-h: 48px;
 
-  --t-h1: clamp(2.5rem, 5vw, 4.5rem);
+  --t-h1: clamp(2.5rem, 11vw, 4rem);
   --t-h2: clamp(1.875rem, 3.34vw, 3rem);
-  --t-lead: 1.25rem;
+  --t-lead: 1.125rem;
   --t-corpo: 1.0625rem;
   --t-pequeno: 0.875rem;
 
+  // Toda entrada desacelera no fim; nada acelera para sair.
+  --saida: cubic-bezier(0.16, 1, 0.3, 1);
+
+  accent-color: var(--ambar);
   color-scheme: dark;
 }
 
@@ -51,8 +87,6 @@
     --padt: 96px;
     --padb: 48px;
     --gut: 24px;
-    --hpadb: 24px;
-    --t-lead: 1.125rem;
   }
 }
 
@@ -65,13 +99,18 @@
 html {
   // O foco do teclado nunca fica escondido sob a barra fixa.
   scroll-padding-top: calc(var(--nav) + 16px);
-  scrollbar-color: var(--acento) var(--chao);
+  scrollbar-color: var(--ardosia) var(--noite);
   text-size-adjust: 100%;
+}
+
+// Com movimento, as âncoras levam a página até a seção em vez de pular.
+:root[data-movimento='ligado'] {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: var(--chao);
+  background: var(--campo);
   color: var(--texto);
   font: 400 var(--t-corpo) / 1.6 var(--fonte-texto);
   -webkit-font-smoothing: antialiased;
@@ -93,7 +132,7 @@ h2 {
 
 h1 {
   font-size: var(--t-h1);
-  line-height: 1.02;
+  line-height: 1;
 }
 
 h2 {
@@ -106,17 +145,21 @@ img {
   max-width: 100%;
 }
 
+a {
+  text-underline-offset: 0.2em;
+}
+
 button {
   font: inherit;
 }
 
 ::selection {
-  background: var(--acento);
-  color: var(--sobre-acento);
+  background: var(--ambar);
+  color: var(--noite);
 }
 
 :focus-visible {
-  outline: 2px solid var(--acento);
+  outline: 2px solid var(--enfase);
   outline-offset: 3px;
 }
 
@@ -128,7 +171,7 @@ button {
 
 // Uma largura só para a barra, todas as seções e o fecho.
 .wrap {
-  width: min(100% - 2 * var(--gut), 1280px);
+  width: min(100% - 2 * var(--gut), var(--largura));
   margin-inline: auto;
 }
 
@@ -143,22 +186,25 @@ button {
   padding: var(--padt) 0 var(--padb);
 }
 
-// Um par de botões: o principal é o único preenchido com o acento.
+// Um par de botões: o principal é o único preenchido com âmbar; o segundo só tem contorno.
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: var(--btn-h);
-  padding: 0 24px;
-  border: 0;
+  padding: 0 22px;
+  border: 1px solid transparent;
   border-radius: var(--raio);
-  font: 500 1rem / 1 var(--fonte-texto);
+  font: 600 1rem / 1 var(--fonte-texto);
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color 160ms ease-out,
-    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+    transform 160ms var(--saida),
+    background-color 160ms var(--saida),
+    border-color 160ms var(--saida),
+    box-shadow 160ms var(--saida),
+    color 160ms var(--saida);
 
   &:active {
     transform: scale(0.97);
@@ -166,13 +212,30 @@ button {
 }
 
 .btn--primary {
-  background: var(--acento);
-  color: var(--sobre-acento);
+  background: var(--acao);
+  box-shadow: 0 14px 28px -16px rgb(0 0 0 / 80%);
+  color: var(--sobre-acao);
 }
 
 .btn--secondary {
-  background: rgb(228 226 218 / 10%);
+  border-color: var(--borda);
+  background: transparent;
   color: var(--texto);
+}
+
+// O toque responde também pela cor, para quem está sem movimento ou sem ponteiro.
+.btn--primary:active {
+  background: var(--acao-viva);
+}
+
+.btn--secondary:active {
+  border-color: var(--creme);
+  background: var(--realce);
+}
+
+.btn--pequeno {
+  min-height: 44px;
+  padding: 0 16px;
 }
 
 .btn-row {
@@ -186,7 +249,7 @@ button {
   background: linear-gradient(currentcolor, currentcolor) no-repeat 0 100% / 0 1px;
   color: inherit;
   text-decoration: none;
-  transition: background-size 200ms ease-out;
+  transition: background-size 200ms var(--saida);
 }
 
 @media (hover: hover) {
@@ -194,12 +257,18 @@ button {
     transform: translateY(-1px);
   }
 
+  .btn:active {
+    transform: scale(0.97);
+  }
+
   .btn--primary:hover {
-    background: color-mix(in srgb, var(--acento) 86%, white);
+    background: var(--acao-viva);
+    box-shadow: 0 18px 32px -16px rgb(0 0 0 / 85%);
   }
 
   .btn--secondary:hover {
-    background: rgb(228 226 218 / 17%);
+    border-color: var(--creme);
+    background: var(--realce);
   }
 
   .link:hover {
@@ -209,6 +278,7 @@ button {
 
 .link:focus-visible {
   background-size: 100% 1px;
+  transition: none;
 }
 
 // Texto só para leitores de tela.
@@ -224,8 +294,9 @@ button {
   white-space: nowrap;
 }
 
-// Menos movimento: ficam as trocas de cor e opacidade, sai o deslocamento.
-@media (prefers-reduced-motion: reduce) {
+// Sem movimento (o sistema pediu menos, a pessoa desligou ou não há JavaScript): ficam as trocas de
+// cor e opacidade, sai o deslocamento. Quem decide é `movimento.js`, antes da primeira pintura.
+:root:not([data-movimento='ligado']) {
   .btn,
   .btn:hover,
   .btn:active {

@@ -36,7 +36,7 @@ const CABE_A_CENA = '(min-width: 900px) and (min-height: 660px)';
     id: 'folhas',
     class: 'section',
     'aria-labelledby': 'titulo-folhas',
-    '[class.folhas--ligada]': 'movimento.ligado()',
+    '[class.folhas--ligada]': 'movimento.permitido()',
     '[class.folhas--estatica]': 'falhou()',
     '[class.folhas--interativa]': 'interativa()',
   },

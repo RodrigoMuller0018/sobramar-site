@@ -1,18 +1,10 @@
-// A página termina em papel: a mesma tinta e o mesmo creme da folha, numa tela inteira.
+// A página termina numa superfície marinho, um tom acima do campo. O creme fica só na folha.
 :host {
-  --chao: var(--papel-de-fundo);
-  --texto: var(--tinta);
-  --texto-suave: #4c5359;
-  --acento: var(--tinta);
-  --sobre-acento: var(--papel-de-fundo);
-  --linha: rgb(16 32 42 / 16%);
-
   display: block;
   min-height: 100svh;
   padding: var(--padt) 0 var(--padb);
-  background: var(--chao);
+  background: var(--superficie);
   color: var(--texto);
-  color-scheme: light;
 }
 
 .fecho__wrap {
@@ -42,8 +34,8 @@
 
 .marca {
   color: var(--texto);
-  font: italic 400 1.5rem / 1 var(--fonte-titulo);
-  letter-spacing: -0.02em;
+  font: 400 1.75rem / 1 var(--fonte-titulo);
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 
