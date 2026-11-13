@@ -42,3 +42,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Impeccable: cache do hook de design e ajustes locais (a config compartilhada fica versionada)
+/.impeccable/hook.cache.json
+/.impeccable/config.local.json

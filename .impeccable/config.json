@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/inicio/hero.html"
+        ],
+        "createdAt": "2026-11-12T22:45:22.810Z",
+        "reason": "falso positivo: o src do <img> vem de um binding do Angular ([src]=ativo.quadroFinal.url); no HTML renderizado a imagem carrega (hero/carne-fim.webp), conferido no navegador"
+      }
+    ]
+  }
+}
