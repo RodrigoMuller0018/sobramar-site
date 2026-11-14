@@ -60,9 +60,15 @@ describe('Folhas', () => {
     expect(opcoes?.secao).toBe(elemento);
 
     opcoes?.aoProgredir(0.25);
-    expect(papeis[0].style.transform).toBe('rotateY(-44deg)');
+    expect(papeis[0].style.transform).toContain('rotateY(-44deg)');
     expect(papeis[0].style.opacity).toBe('1');
-    expect(papeis[1].style.transform).toBe('rotateY(0deg)');
+    expect(papeis[1].style.transform).toContain('translate3d(13px, 8px, -35px)');
+    expect(papeis[1].style.filter).toBe('brightness(0.9) blur(0.6px)');
+
+    opcoes?.aoChegar?.(0);
+    expect(elemento.querySelector<HTMLElement>('.folhas__pilha')?.style.transform).toContain(
+      'rotateX(24deg)',
+    );
 
     opcoes?.aoProgredir(1);
     await fixture.whenStable();
@@ -85,11 +91,15 @@ describe('Folhas', () => {
     const papel = fixture.nativeElement.querySelector('article.folha') as HTMLElement;
     opcoes?.aoProgredir(0.25);
 
+    opcoes?.aoChegar?.(0.5);
+
     midia.mudar(CABE_A_CENA, false);
     await fixture.whenStable();
 
     expect(cena.destruir).toHaveBeenCalledTimes(1);
     expect(papel.style.transform).toBe('');
+    expect(papel.style.filter).toBe('');
+    expect(fixture.nativeElement.querySelector('.folhas__pilha').style.transform).toBe('');
   });
 
   it('deve ficar parada com menos movimento e oferecer o botão para ligar a rolagem', async () => {

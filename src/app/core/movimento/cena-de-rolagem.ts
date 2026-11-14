@@ -11,6 +11,11 @@ export interface OpcoesDaCena {
   readonly secao: HTMLElement;
   /** Chamado a cada quadro com o progresso da rolagem dentro da seção, de 0 a 1. */
   readonly aoProgredir: (progresso: number) => void;
+  /**
+   * Chamado enquanto a seção sobe pela tela, antes de prender: 0 quando o topo dela aparece
+   * embaixo, 1 quando ele chega ao alto. Opcional.
+   */
+  readonly aoChegar?: (progresso: number) => void;
 }
 
 export type CriarCena = (opcoes: OpcoesDaCena) => Promise<CenaDeRolagem>;

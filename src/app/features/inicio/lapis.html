@@ -1,0 +1,43 @@
+<div class="wrap grid lapis__grade">
+  <div class="lapis__texto">
+    <h2 id="titulo-lapis">A lápis enquanto é estimativa, em tinta quando a conta chega</h2>
+    <p class="lead">
+      Todo valor estimado diz o motivo na própria linha. Quando a conta chega, vira tinta. Quando
+      você dá baixa, ganha o carimbo.
+    </p>
+    <div class="lapis__passos">
+      <button
+        #chegou
+        type="button"
+        class="btn btn--secondary btn--pequeno"
+        [disabled]="passo() !== 'estimado'"
+        (click)="contaChegou()"
+      >
+        A conta de luz chegou
+      </button>
+      <button
+        #baixa
+        type="button"
+        class="btn btn--secondary btn--pequeno"
+        [disabled]="passo() !== 'chegou'"
+        (click)="darBaixa()"
+      >
+        Dar baixa na luz
+      </button>
+      <button
+        #voltar
+        type="button"
+        class="btn btn--secondary btn--pequeno"
+        [disabled]="passo() === 'estimado'"
+        (click)="voltarAoComeco()"
+      >
+        Voltar ao começo
+      </button>
+    </div>
+    <p class="lapis__nota" aria-live="polite">{{ fala() }}</p>
+  </div>
+
+  <div class="lapis__mesa" (pointermove)="inclinar($event)" (pointerleave)="endireitar()">
+    <article app-folha #papel id="folha-do-lapis" [mes]="maio" [luz]="passo()"></article>
+  </div>
+</div>

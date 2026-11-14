@@ -1,60 +1,100 @@
-<p class="folha__numero">Folha {{ mes().numero }} de 12</p>
-
-<table>
-  <caption [id]="idDoTitulo()">
-    {{
-      mes().nome
-    }}
-  </caption>
-  <thead>
-    <tr>
-      <th scope="col"><span class="so-leitor">Item</span></th>
-      <th scope="col"><span class="so-leitor">Situação</span></th>
-      <th scope="col"><span class="so-leitor">Valor</span></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="grupo">
-      <th scope="rowgroup" colspan="3">Entra</th>
-    </tr>
-    @for (linha of entra(); track linha.descricao) {
-      <tr>
-        <th scope="row">
-          <span class="descricao">{{ linha.descricao }}</span>
-          <span class="detalhe">{{ linha.detalhe }}</span>
-        </th>
-        <td class="situacao">
-          <span class="so-leitor">{{ linha.situacao }}</span>
-        </td>
-        <td class="valor">{{ linha.valor }}</td>
-      </tr>
-    }
-  </tbody>
-  <tbody>
-    <tr class="grupo">
-      <th scope="rowgroup" colspan="3">Sai</th>
-    </tr>
-    @for (linha of sai(); track linha.descricao) {
-      <tr [class.estimada]="linha.estimada">
-        <th scope="row">
-          <span class="descricao">{{ linha.descricao }}</span>
-          <span class="detalhe">{{ linha.detalhe }}</span>
-        </th>
-        <td class="situacao">
-          @if (linha.carimbada) {
-            <span class="carimbo">Pago</span>
-          } @else {
-            <span class="so-leitor">{{ linha.situacao }}</span>
-          }
-        </td>
-        <td class="valor">{{ linha.valor }}</td>
-      </tr>
-    }
-  </tbody>
-</table>
-
-<p class="folha__sobra">
-  <span class="folha__rotulo">Sobram</span>
-  <strong>{{ sobra() }}</strong>
-  <span class="folha__estado">{{ mes().estado }}</span>
+<p class="folha__canhoto">
+  <span class="so-leitor">Folha {{ mes().numero }} de 12</span>
+  <span class="folha__rotulo" aria-hidden="true">Folha</span>
+  <b aria-hidden="true">{{ numero() }}</b>
+  <span class="folha__rotulo" aria-hidden="true">de 12</span>
 </p>
+
+<div class="folha__corpo" [attr.data-luz]="luz()">
+  <table>
+    <caption [id]="idDoTitulo()">
+      {{
+        mes().nome
+      }}
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col"><span class="so-leitor">Item</span></th>
+        <th scope="col"><span class="so-leitor">Situação</span></th>
+        <th scope="col"><span class="so-leitor">Valor</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="grupo">
+        <th scope="rowgroup" colspan="3">Entra</th>
+      </tr>
+      @for (linha of entra(); track linha.descricao) {
+        <tr>
+          <th scope="row">
+            <span class="descricao">{{ linha.descricao }}</span>
+            <span class="detalhe">{{ linha.detalhe }}</span>
+          </th>
+          <td class="situacao">
+            <span class="so-leitor">{{ linha.situacao }}</span>
+          </td>
+          <td class="valor">{{ linha.valor }}</td>
+        </tr>
+      }
+    </tbody>
+    <tbody>
+      <tr class="grupo">
+        <th scope="rowgroup" colspan="3">Sai</th>
+      </tr>
+      @for (linha of sai(); track linha.descricao) {
+        @if (linha.descricao === 'Luz' && luz(); as passo) {
+          <!-- A luz em dois traços no mesmo lugar: o lápis por baixo e a tinta por cima. -->
+          <tr class="luz">
+            <th scope="row">
+              <span class="descricao duplo">
+                <span class="lapis">{{ linha.descricao }}</span>
+                <span class="tinta" aria-hidden="true">{{ linha.descricao }}</span>
+              </span>
+              <span class="detalhe trocas">
+                <span [class.vale]="passo === 'estimado'">{{ linha.detalhe }}</span>
+                <span [class.vale]="passo !== 'estimado'">{{ CONTA_CHEGOU }}</span>
+              </span>
+            </th>
+            <td class="situacao">
+              <span class="so-leitor">{{ situacaoDaLuz() }}</span>
+              <span class="carimbo carimbo--luz" aria-hidden="true">Pago</span>
+            </td>
+            <td class="valor">
+              <span class="duplo">
+                <span class="lapis">{{ linha.valor }}</span>
+                <span class="tinta" aria-hidden="true">{{ linha.valor }}</span>
+              </span>
+            </td>
+          </tr>
+        } @else {
+          <tr [class.estimada]="linha.estimada">
+            <th scope="row">
+              <span class="descricao">{{ linha.descricao }}</span>
+              <span class="detalhe">{{ linha.detalhe }}</span>
+            </th>
+            <td class="situacao">
+              @if (linha.carimbada) {
+                <span class="carimbo">Pago</span>
+              } @else {
+                <span class="so-leitor">{{ linha.situacao }}</span>
+              }
+            </td>
+            <td class="valor">{{ linha.valor }}</td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+
+  <p class="folha__sobra">
+    <span class="folha__rotulo">Sobram</span>
+    <strong>{{ sobra() }}</strong>
+    @if (luz(); as passo) {
+      <span class="folha__estado trocas">
+        <span [class.vale]="passo === 'estimado'">{{ mes().estado }}</span>
+        <span [class.vale]="passo !== 'estimado'">{{ SO_FALTA_A_FATURA }}</span>
+      </span>
+    } @else {
+      <span class="folha__estado">{{ mes().estado }}</span>
+    }
+  </p>
+</div>

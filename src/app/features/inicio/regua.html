@@ -1,0 +1,79 @@
+<div class="wrap">
+  <div class="regua__texto">
+    <h2 id="titulo-regua">O que você cadastra uma vez cai sozinho nos meses certos</h2>
+    <p class="lead">
+      Salário, contas fixas e parcelas ocupam o ano inteiro. A geladeira, comprada em 6 vezes,
+      aparece de maio a outubro e muda a sobra de cada um desses meses.
+    </p>
+    @if (movimento.permitido()) {
+      <button type="button" class="btn btn--secondary btn--pequeno" (click)="repetir()">
+        Parcelar a geladeira de novo
+      </button>
+    }
+  </div>
+
+  <div
+    class="regua__rolavel"
+    #rolavel
+    tabindex="0"
+    role="group"
+    aria-label="Os 12 meses de 2027, com cada compromisso no mês em que cai"
+  >
+    <div class="regua">
+      <div class="regua__canto"></div>
+      @for (mes of meses; track mes.curto; let indice = $index) {
+        <div
+          #cabeca
+          class="regua__mes"
+          [class.regua__mes--hoje]="mes.hoje"
+          [class.regua__mes--aceso]="acesos()[indice]"
+        >
+          {{ mes.curto }}
+        </div>
+      }
+
+      <div class="regua__grupo">Entra</div>
+      @for (linha of entradas; track linha.nome) {
+        <div class="regua__nome" #nome>{{ linha.nome }}</div>
+        @for (faixa of linha.faixas; track faixa.coluna) {
+          <div
+            #comum
+            class="faixa faixa--entra"
+            [class.faixa--curta]="faixa.curta"
+            [style.grid-column]="faixa.coluna"
+          >
+            {{ faixa.texto }}
+          </div>
+        }
+      }
+
+      <div class="regua__grupo">Sai</div>
+      @for (linha of saidas; track linha.nome) {
+        <div class="regua__nome">{{ linha.nome }}</div>
+        @for (faixa of linha.faixas; track faixa.coluna) {
+          <div
+            #comum
+            class="faixa"
+            [class.faixa--curta]="faixa.curta"
+            [style.grid-column]="faixa.coluna"
+          >
+            {{ faixa.texto }}
+          </div>
+        }
+      }
+      <div class="regua__nome">{{ geladeira.nome }}</div>
+      @for (faixa of geladeira.faixas; track faixa.coluna) {
+        <div #nova class="faixa faixa--nova" [style.grid-column]="faixa.coluna">
+          {{ faixa.texto }}
+        </div>
+      }
+
+      <div class="regua__nome regua__nome--total">Sobra</div>
+      @for (celula of celulas(); track $index) {
+        <div class="regua__sobra" [class.regua__sobra--mudou]="celula.mudou">
+          <span #numero>{{ celula.texto }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

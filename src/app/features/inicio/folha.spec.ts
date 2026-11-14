@@ -1,14 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { violacoesDeAcessibilidade } from '../../../testing/acessibilidade';
 import { MESES_DO_EXEMPLO, MesDoExemplo } from './dominio/exemplo';
-import { Folha } from './folha';
+import { Folha, PassoDaLuz } from './folha';
 
 describe('Folha', () => {
   const [marco, , maio] = MESES_DO_EXEMPLO;
 
-  async function renderizar(mes: MesDoExemplo): Promise<HTMLElement> {
+  async function renderizar(
+    mes: MesDoExemplo,
+    luz: PassoDaLuz | null = null,
+  ): Promise<HTMLElement> {
     const fixture = TestBed.createComponent(Folha);
     fixture.componentRef.setInput('mes', mes);
+    fixture.componentRef.setInput('luz', luz);
     await fixture.whenStable();
     return fixture.nativeElement;
   }
@@ -20,7 +24,8 @@ describe('Folha', () => {
     );
 
     expect(folha.querySelector('caption')?.textContent?.trim()).toBe('Março de 2027');
-    expect(folha.querySelector('.folha__numero')?.textContent).toBe('Folha 3 de 12');
+    expect(folha.querySelector('.folha__canhoto .so-leitor')?.textContent).toBe('Folha 3 de 12');
+    expect(folha.querySelector('.folha__canhoto b')?.textContent).toBe('03');
     expect(grupos).toEqual(['Entra', 'Sai']);
     expect(folha.querySelectorAll('tbody th[scope="row"]')).toHaveLength(7);
     expect(folha.querySelector('table')?.textContent).not.toMatch(/[+−-]\s?R\$/);
@@ -43,6 +48,35 @@ describe('Folha', () => {
     expect(folha.querySelector('tr.estimada')?.textContent).toContain('estimado, a conta chega');
     expect(folha.querySelector('.folha__sobra strong')?.textContent).toBe('R$ 2.680,10');
     expect(folha.getAttribute('aria-labelledby')).toBe('titulo-folha-2027-05');
+  });
+
+  it('deve escrever a luz a lápis e a tinta no mesmo lugar quando a seção 4 pede', async () => {
+    const folha = await renderizar(maio, 'estimado');
+    const luz = folha.querySelector('tr.luz') as HTMLElement;
+    const valendo = (onde: Element) =>
+      Array.from(onde.querySelectorAll('.trocas .vale')).map((texto) => texto.textContent);
+
+    expect(folha.querySelector('.folha__corpo')?.getAttribute('data-luz')).toBe('estimado');
+    expect(luz.querySelectorAll('.valor .lapis, .valor .tinta')).toHaveLength(2);
+    expect(luz.querySelector('.valor .tinta')?.getAttribute('aria-hidden')).toBe('true');
+    expect(luz.querySelector('.situacao .so-leitor')?.textContent).toBe('estimado');
+    expect(valendo(folha)).toEqual([
+      'dia 15, estimado, a conta chega por volta do dia 12',
+      maio.estado,
+    ]);
+  });
+
+  it('deve trocar o motivo e a situação da luz quando a conta chega e quando é paga', async () => {
+    const chegou = await renderizar(maio, 'chegou');
+    expect(chegou.querySelector('tr.luz .so-leitor')?.textContent).toBe('previsto');
+    expect(chegou.querySelector('.trocas .vale')?.textContent).toBe('dia 15, a conta chegou');
+
+    const pago = await renderizar(maio, 'pago');
+    expect(pago.querySelector('tr.luz .so-leitor')?.textContent).toBe('pago');
+    expect(pago.querySelector('.folha__estado .vale')?.textContent).toBe(
+      'estimado: fatura do cartão final 4321 não conferida',
+    );
+    expect(await violacoesDeAcessibilidade(pago)).toEqual([]);
   });
 
   it('deve não ter violações de acessibilidade', async () => {

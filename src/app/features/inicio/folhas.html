@@ -31,8 +31,7 @@
       }
     </div>
 
-    <div class="folhas__pilha">
-      <span class="lombada" aria-hidden="true"></span>
+    <div class="folhas__pilha" #pilha>
       @for (folha of folhas; track folha.id; let indice = $index) {
         <article
           app-folha

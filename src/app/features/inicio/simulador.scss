@@ -1,0 +1,149 @@
+// Seção 5, num campo marinho: o formulário à esquerda, a tabela de junho a dezembro à direita.
+:host {
+  display: block;
+  height: auto;
+  background: var(--superficie);
+}
+
+.simulador__grade {
+  row-gap: 40px;
+  align-items: center;
+}
+
+.simulador__texto {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 20px;
+
+  .lead {
+    color: var(--texto-suave);
+  }
+}
+
+.simulador {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  max-width: 26rem;
+}
+
+.campo {
+  display: grid;
+  gap: 6px;
+
+  label {
+    font-size: var(--t-pequeno);
+    font-weight: 500;
+  }
+
+  input[type='text'] {
+    min-height: var(--btn-h);
+    padding: 0 14px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--campo);
+    color: var(--texto);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    caret-color: var(--ambar);
+  }
+
+  input[type='range'] {
+    width: 100%;
+    accent-color: var(--ambar);
+  }
+}
+
+.simulador__resumo {
+  color: var(--texto-suave);
+}
+
+.resultado {
+  grid-column: 1 / -1;
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  caption {
+    padding-bottom: 12px;
+    color: var(--texto-suave);
+    font-size: var(--t-pequeno);
+    text-align: left;
+  }
+
+  th,
+  td {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--linha);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  // Altura fixa: nada pula enquanto a pessoa arrasta as parcelas.
+  tbody th,
+  tbody td {
+    height: 2.9rem;
+  }
+
+  th:first-child {
+    text-align: left;
+  }
+
+  thead th {
+    color: var(--texto-suave);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  td span {
+    display: inline-block;
+  }
+
+  .suave {
+    color: var(--texto-suave);
+  }
+
+  .depois {
+    font: 400 1.5rem / 1.1 var(--fonte-titulo);
+  }
+
+  .intacto .depois {
+    color: var(--texto-suave);
+    font: inherit;
+  }
+}
+
+@media (min-width: 900px) {
+  .simulador__texto {
+    grid-column: 1 / span 5;
+  }
+
+  .resultado {
+    grid-column: 7 / span 6;
+  }
+}
+
+// A tabela cabe nos 390 px do celular: rótulos quebram em duas linhas e o espaço entre colunas é fixo.
+@media (max-width: 520px) {
+  .resultado {
+    font-size: var(--t-pequeno);
+
+    thead th {
+      letter-spacing: 0.08em;
+      white-space: normal;
+      vertical-align: bottom;
+    }
+
+    th + td,
+    td + td,
+    thead th + th {
+      padding-left: 8px;
+    }
+
+    .depois {
+      font-size: 1.25rem;
+    }
+  }
+}
