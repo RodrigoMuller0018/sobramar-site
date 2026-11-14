@@ -93,6 +93,14 @@ describe('projecao', () => {
       expect(lerCentavos('abc')).toBe(0);
       expect(lerCentavos('0,00')).toBe(0);
       expect(lerCentavos('99.999.999,00')).toBe(5000000);
+      expect(lerCentavos('9'.repeat(400))).toBe(5000000);
+    });
+
+    it('deve aceitar o ponto como casa decimal quando não há vírgula', () => {
+      expect(lerCentavos('99.90')).toBe(9990);
+      expect(lerCentavos('1800.5')).toBe(180050);
+      expect(lerCentavos('1.800')).toBe(180000);
+      expect(lerCentavos('1.800.000')).toBe(5000000);
     });
   });
 

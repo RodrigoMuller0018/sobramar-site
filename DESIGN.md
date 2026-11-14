@@ -25,17 +25,17 @@ typography:
     lineHeight: 1.08
     letterSpacing: '-0.02em'
   lead:
-    fontFamily: 'Onest Variable, Segoe UI, system-ui, sans-serif'
+    fontFamily: 'Onest Variable, Reserva do Texto, Reserva do Texto Arial, Segoe UI, system-ui, sans-serif'
     fontSize: '1.125rem'
     fontWeight: 400
     lineHeight: 1.5
   body:
-    fontFamily: 'Onest Variable, Segoe UI, system-ui, sans-serif'
+    fontFamily: 'Onest Variable, Reserva do Texto, Reserva do Texto Arial, Segoe UI, system-ui, sans-serif'
     fontSize: '1.0625rem'
     fontWeight: 400
     lineHeight: 1.6
   label:
-    fontFamily: 'Onest Variable, Segoe UI, system-ui, sans-serif'
+    fontFamily: 'Onest Variable, Reserva do Texto, Reserva do Texto Arial, Segoe UI, system-ui, sans-serif'
     fontSize: '0.75rem'
     fontWeight: 600
     lineHeight: 1.2
@@ -162,6 +162,8 @@ Georgia de reserva)
 
 **Reserva:** "Reserva da Serifa" não é um tipo novo. É a Georgia do sistema com a largura ajustada
 (75,5 %) para ocupar o mesmo espaço da Instrument Serif enquanto ela carrega, sem a página pular.
+"Reserva do Texto" e "Reserva do Texto Arial" fazem o mesmo pela Onest: Segoe UI a 105,2 % e Arial a
+102,9 %, medidas com o lead do hero.
 
 **Character:** a serifa dá ao número a calma de coisa impressa; a Onest diz o resto sem chamar
 atenção. Juntas parecem um documento bem feito, não um painel.

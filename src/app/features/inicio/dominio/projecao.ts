@@ -86,11 +86,17 @@ export function faixasDaRegra(regra: Regra): Faixa[] {
   }, []);
 }
 
-/** Lê um valor escrito do jeito brasileiro ("1.800,00", "R$ 99,9"). O que não for valor vira zero. */
+/**
+ * Lê um valor escrito do jeito brasileiro ("1.800,00", "R$ 99,9"). Sem vírgula, um ponto seguido de
+ * um ou dois algarismos no fim é a casa decimal ("99.90"), como se escreve no teclado do celular; nos
+ * outros casos o ponto separa milhares. O que não for valor vira zero; o que passar do teto, o teto.
+ */
 export function lerCentavos(texto: string): number {
-  const limpo = texto.replace(/[^\d,]/g, '').replace(',', '.');
+  const semEspacos = texto.replace(/[^\d.,]/g, '');
+  const pontoDecimal = !semEspacos.includes(',') && /^\d*\.\d{1,2}$/.test(semEspacos);
+  const limpo = pontoDecimal ? semEspacos : semEspacos.replace(/\./g, '').replace(',', '.');
   const centavos = Math.round(Number.parseFloat(limpo) * 100);
-  return Number.isFinite(centavos) && centavos > 0 ? Math.min(centavos, TETO_DA_COMPRA) : 0;
+  return Number.isNaN(centavos) || centavos <= 0 ? 0 : Math.min(centavos, TETO_DA_COMPRA);
 }
 
 export interface MesSimulado {

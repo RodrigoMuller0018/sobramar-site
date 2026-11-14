@@ -48,8 +48,10 @@
     caret-color: var(--ambar);
   }
 
+  // Sem a margem que o Chrome dá ao controle, que o fazia passar 2 px da margem da página.
   input[type='range'] {
     width: 100%;
+    margin: 0;
     accent-color: var(--ambar);
   }
 }
@@ -139,7 +141,8 @@
     th + td,
     td + td,
     thead th + th {
-      padding-left: 8px;
+      // 6 px: com 8, a tabela passava 2 px da margem em 390.
+      padding-left: 6px;
     }
 
     .depois {

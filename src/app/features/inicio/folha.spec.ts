@@ -56,6 +56,9 @@ describe('Folha', () => {
     const valendo = (onde: Element) =>
       Array.from(onde.querySelectorAll('.trocas .vale')).map((texto) => texto.textContent);
 
+    // A mesma folha de maio já está na seção das folhas: o título não pode repetir o id dela.
+    expect(folha.getAttribute('aria-labelledby')).toBe('titulo-folha-2027-05-a-lapis');
+    expect(folha.querySelector('caption')?.id).toBe('titulo-folha-2027-05-a-lapis');
     expect(folha.querySelector('.folha__corpo')?.getAttribute('data-luz')).toBe('estimado');
     expect(luz.querySelectorAll('.valor .lapis, .valor .tinta')).toHaveLength(2);
     expect(luz.querySelector('.valor .tinta')?.getAttribute('aria-hidden')).toBe('true');

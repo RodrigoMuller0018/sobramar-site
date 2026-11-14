@@ -56,7 +56,9 @@
   border-radius: 50%;
 }
 
-.controle--movimento[aria-pressed='true']::before {
+// O estado está no rótulo ("Movimento ligado"); por isso o botão não leva `aria-pressed`, que faria
+// o leitor de tela anunciar "Movimento desligado, não pressionado".
+.controle--movimento.controle--ligado::before {
   border-color: var(--enfase);
   background: var(--enfase);
 }

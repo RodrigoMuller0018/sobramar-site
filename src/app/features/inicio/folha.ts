@@ -43,7 +43,10 @@ export class Folha {
   protected readonly CONTA_CHEGOU = 'dia 15, a conta chegou';
   protected readonly SO_FALTA_A_FATURA = 'estimado: fatura do cartão final 4321 não conferida';
 
-  protected readonly idDoTitulo = computed(() => `titulo-folha-${this.mes().competencia}`);
+  /** A folha de maio aparece duas vezes na página; a da seção 4 (com `luz`) ganha outro id. */
+  protected readonly idDoTitulo = computed(
+    () => `titulo-folha-${this.mes().competencia}${this.luz() === null ? '' : '-a-lapis'}`,
+  );
   /** Dois algarismos, como no canhoto impresso: "05". */
   protected readonly numero = computed(() => String(this.mes().numero).padStart(2, '0'));
   protected readonly entra = computed(() => this.mes().entra.map(paraEntrada));

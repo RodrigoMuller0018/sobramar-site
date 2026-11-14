@@ -1,18 +1,6 @@
-// Reserva com a largura da Instrument Serif. Enquanto ela carrega, os títulos aparecem numa serifa
-// do sistema ajustada para ocupar o mesmo espaço, e a página não pula quando ela chega. A
-// porcentagem foi medida com o texto do site (Georgia é 32 % mais larga).
-@font-face {
-  font-family: 'Reserva da Serifa';
-  src: local('Georgia'), local('Noto Serif');
-  size-adjust: 75.5%;
-}
-
-@font-face {
-  font-family: 'Reserva da Serifa';
-  font-style: italic;
-  src: local('Georgia Italic'), local('Georgia-Italic'), local('Noto Serif Italic');
-  size-adjust: 75.9%;
-}
+// As fontes (as três da dobra e as reservas com a largura delas) são declaradas num <style> do
+// `index.html`: o CSS crítico que o build põe na página deixa `@font-face` de fora, e sem elas a
+// primeira pintura usava a serifa do sistema crua e a dobra pulava quando as fontes chegavam.
 
 // Tokens do site, de DESIGN.md: campo noite, creme só como papel da folha e âmbar como única cor de
 // ação. O contraste de cada par de texto e fundo foi calculado (WCAG) e dá pelo menos 4,5:1; os
@@ -49,7 +37,9 @@
   --carimbo: var(--marinho);
 
   --fonte-titulo: 'Instrument Serif', 'Reserva da Serifa', 'Iowan Old Style', Georgia, serif;
-  --fonte-texto: 'Onest Variable', 'Segoe UI', system-ui, sans-serif;
+  --fonte-texto:
+    'Onest Variable', 'Reserva do Texto', 'Reserva do Texto Arial', 'Segoe UI', system-ui,
+    sans-serif;
 
   // Ritmo: uma seção por tela, as mesmas margens à esquerda e à direita em toda a página.
   --nav: 72px;

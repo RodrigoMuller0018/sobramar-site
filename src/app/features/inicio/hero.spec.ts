@@ -283,7 +283,9 @@ describe('Hero', () => {
       vi.advanceTimersByTime(4000);
       estabilizar();
       expect(rotulos(fixture)).toEqual(['Repetir a abertura', 'Movimento ligado']);
-      expect(controle(fixture, 'Movimento ligado').getAttribute('aria-pressed')).toBe('true');
+      // O estado vem no rótulo; `aria-pressed` junto faria o leitor anunciar o estado duas vezes.
+      expect(controle(fixture, 'Movimento ligado').hasAttribute('aria-pressed')).toBe(false);
+      expect(controle(fixture, 'Movimento ligado').classList).toContain('controle--ligado');
     });
 
     it('deve contar a espera do texto desde que a página abriu, não desde que o script chegou', () => {
