@@ -83,6 +83,7 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
+            "runnerConfig": "vitest-base.config.mts",
             "coverageInclude": ["src/app/**/*.ts"],
             "coverageExclude": [
               "src/**/*.spec.ts",
