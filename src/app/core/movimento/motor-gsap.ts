@@ -13,7 +13,7 @@ const MILISSEGUNDOS = 1000;
  * A seção não é "pinada" pelo GSAP: ela tem duas telas de altura e o conteúdo fica preso por
  * `position: sticky`, então o progresso é só a rolagem dentro dela.
  */
-export function criarCena({ secao, aoProgredir }: OpcoesDaCena): CenaDeRolagem {
+export function criarCena({ secao, aoProgredir, aoChegar }: OpcoesDaCena): CenaDeRolagem {
   gsap.registerPlugin(ScrollTrigger);
 
   const rolagem = new Lenis({ anchors: true });
@@ -27,8 +27,23 @@ export function criarCena({ secao, aoProgredir }: OpcoesDaCena): CenaDeRolagem {
   gsap.ticker.lagSmoothing(0);
 
   const estado = { progresso: 0 };
+  const chegada = { progresso: 0 };
   let animacao: gsap.core.Tween;
+  let aproximacao: gsap.core.Tween | null = null;
   try {
+    if (aoChegar) {
+      aproximacao = gsap.to(chegada, {
+        progresso: 1,
+        ease: 'none',
+        onUpdate: () => aoChegar(chegada.progresso),
+        scrollTrigger: {
+          trigger: secao,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: ATRASO_DO_SCRUB,
+        },
+      });
+    }
     animacao = gsap.to(estado, {
       progresso: 1,
       ease: 'none',
@@ -42,6 +57,8 @@ export function criarCena({ secao, aoProgredir }: OpcoesDaCena): CenaDeRolagem {
     });
   } catch (erro) {
     // Sem a animação, a rolagem suave não pode ficar ligada sozinha.
+    aproximacao?.scrollTrigger?.kill();
+    aproximacao?.kill();
     pararRolagem();
     throw erro;
   }
@@ -54,6 +71,8 @@ export function criarCena({ secao, aoProgredir }: OpcoesDaCena): CenaDeRolagem {
       }
     },
     destruir() {
+      aproximacao?.scrollTrigger?.kill();
+      aproximacao?.kill();
       animacao.scrollTrigger?.kill();
       animacao.kill();
       pararRolagem();

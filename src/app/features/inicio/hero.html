@@ -1,46 +1,82 @@
-<div class="wrap">
-  <div class="grid hero__grade">
-    <div class="hero__texto">
-      <h1 id="titulo-hero">O carnê dos seus <em>próximos 12 meses</em></h1>
-      <p class="lead">
-        App de contas para quem recebe salário e parcela no cartão. Cada mês é uma folha com o que
-        entra, o que sai e a sobra. No exemplo, maio de 2027 fecha com R$ 2.680,10.
+<div
+  class="palco"
+  [class.palco--armada]="armada()"
+  [class.palco--revelada]="revelada()"
+  [class.palco--parada]="parada()"
+  [class.palco--imagem-pronta]="imagemPronta()"
+  [class.palco--pede-controle]="pedeControle()"
+>
+  <div class="wrap hero__coluna">
+    <div class="hero__texto" #texto>
+      <h1 id="titulo-hero">
+        <span class="entra entra-1">O carnê dos seus</span>&ngsp;<span class="entra entra-2"
+          ><em>próximos 12 meses</em></span
+        >
+      </h1>
+      <p class="lead entra entra-3">
+        Para quem recebe salário e parcela no cartão: cada mês é uma folha, com o que entra, o que
+        sai e o que sobra. No exemplo, {{ fato.mes }} fecha com
+        <span class="hero__fato"
+          >sobra de <strong>{{ fato.sobra }}</strong
+          >.</span
+        >
       </p>
-      <div class="btn-row">
+      <div class="btn-row entra entra-4">
         <a class="btn btn--primary" [href]="links.comecar">Montar meu carnê</a>
         <a class="btn btn--secondary" href="#folhas">Ver as folhas</a>
       </div>
-      <p class="hero__nota">Sem senha de banco. O app não move dinheiro.</p>
+      <p class="hero__nota entra entra-5">Sem senha de banco. O app não move dinheiro.</p>
     </div>
+  </div>
 
-    <picture class="hero__midia">
+  <div class="hero__cena" #cena>
+    <video
+      #filme
+      class="hero__filme"
+      muted
+      playsinline
+      preload="none"
+      aria-hidden="true"
+      disablepictureinpicture
+      [poster]="ativo.quadroInicial"
+      (playing)="aoTocar()"
+      (ended)="revelar()"
+      (error)="assentar()"
+    ></video>
+    <picture>
       <source
-        media="(min-width: 1024px)"
-        type="image/avif"
-        srcset="img/carne-alto-628.avif 628w, img/carne-alto-954.avif 954w"
-        sizes="(min-width: 1440px) 628px, 45vw"
-      />
-      <source
-        media="(min-width: 1024px)"
-        type="image/webp"
-        srcset="img/carne-alto-628.webp 628w, img/carne-alto-954.webp 954w"
-        sizes="(min-width: 1440px) 628px, 45vw"
-      />
-      <source
-        type="image/avif"
-        srcset="img/carne-largo-684.avif 684w, img/carne-largo-1024.avif 1024w"
-        sizes="100vw"
+        media="not all and (min-width: 1240px) and (min-aspect-ratio: 3/2)"
+        [attr.srcset]="ativo.retrato.url"
+        [attr.width]="ativo.retrato.largura"
+        [attr.height]="ativo.retrato.altura"
       />
       <img
-        src="img/carne-largo-1024.webp"
-        srcset="img/carne-largo-684.webp 684w, img/carne-largo-1024.webp 1024w"
-        sizes="100vw"
-        width="1024"
-        height="768"
-        alt="Carnê de papel creme sobre uma mesa de madeira escura, com o carimbo vermelho Pago e a marca 05/12, ao lado de um lápis"
+        #imagem
+        class="hero__fim"
+        [src]="ativo.quadroFinal.url"
+        [attr.width]="ativo.quadroFinal.largura"
+        [attr.height]="ativo.quadroFinal.altura"
+        [alt]="ativo.descricao"
         fetchpriority="high"
         decoding="async"
       />
     </picture>
   </div>
+  <div class="hero__veu"></div>
+
+  @if (movimento.decidido()) {
+    <div class="hero__controles">
+      @if (comFilme() && revelada()) {
+        <button type="button" class="controle" (click)="abrir()">Repetir a abertura</button>
+      }
+      <button
+        type="button"
+        class="controle controle--movimento"
+        [class.controle--ligado]="movimento.permitido()"
+        (click)="movimento.alternar()"
+      >
+        {{ rotuloDoMovimento() }}
+      </button>
+    </div>
+  }
 </div>

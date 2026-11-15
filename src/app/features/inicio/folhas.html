@@ -23,7 +23,7 @@
         <button
           type="button"
           class="btn btn--secondary"
-          [attr.aria-pressed]="movimento.ligado()"
+          [attr.aria-pressed]="movimento.permitido()"
           (click)="movimento.alternar()"
         >
           Virar as folhas com a rolagem
@@ -31,8 +31,7 @@
       }
     </div>
 
-    <div class="folhas__pilha">
-      <span class="lombada" aria-hidden="true"></span>
+    <div class="folhas__pilha" #pilha>
       @for (folha of folhas; track folha.id; let indice = $index) {
         <article
           app-folha

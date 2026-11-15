@@ -38,13 +38,13 @@
   font: 500 1rem / 1 var(--fonte-texto);
   cursor: pointer;
   transition:
-    background-color 160ms ease-out,
-    transform 160ms ease-out;
+    background-color 160ms var(--saida),
+    transform 160ms var(--saida);
 
   &[aria-pressed='true'] {
     border-color: var(--texto);
     background: var(--texto);
-    color: var(--chao);
+    color: var(--noite);
   }
 
   &:active {
@@ -54,26 +54,18 @@
 
 @media (hover: hover) {
   .meses__botao:not([aria-pressed='true']):hover {
-    background: rgb(228 226 218 / 10%);
+    background: var(--realce);
   }
 }
 
-// A pilha: a lombada à esquerda e as folhas à direita.
+// A pilha: as folhas presas pelo canhoto, uma sobre a outra.
 .folhas__pilha {
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: 14px minmax(0, 1fr);
-}
-
-.lombada {
-  grid-row: 1 / span 3;
-  border-radius: 3px 0 0 3px;
-  background: repeating-linear-gradient(180deg, var(--papel) 0 3px, var(--papel-sombra) 3px 4px);
-  box-shadow: inset -3px 0 4px rgb(0 0 0 / 18%);
 }
 
 .folha {
-  grid-column: 2;
+  grid-column: 1;
 }
 
 // Sem JavaScript: as três folhas em sequência, e os controles somem.
@@ -119,10 +111,12 @@
 // A cena: a seção tem duas telas, o conteúdo fica preso por `sticky` e as folhas se empilham.
 // Quem gira cada folha é o componente, a partir do progresso da rolagem.
 @mixin cena($raiz) {
+  // `clip`, e não `hidden`: o leque não alarga a página e o `sticky` continua funcionando.
   #{$raiz} {
     height: 200svh;
     min-height: 0;
     padding: 0;
+    overflow-x: clip;
   }
 
   #{$raiz} .wrap {
@@ -132,28 +126,26 @@
     padding-block: var(--padt) var(--padb);
   }
 
+  // O ponto de fuga fica na dobra do canhoto: a folha que vira cresce para a direita e nunca
+  // invade a coluna do texto. Quem anda para trás, gira e perde o foco é o componente.
   #{$raiz} .folhas__pilha {
-    perspective: 1600px;
-  }
-
-  #{$raiz} .lombada {
-    grid-row: 1;
+    perspective: 2200px;
+    perspective-origin: 0% 50%;
+    will-change: transform;
   }
 
   #{$raiz} .folhas__pilha .folha {
-    display: block;
-    grid-area: 1 / 2;
-    transform-origin: left center;
+    display: grid;
+    grid-area: 1 / 1;
+    transform-origin: 0% 50%;
+    backface-visibility: hidden;
     animation: none;
-    will-change: transform, opacity;
+    will-change: transform, opacity, filter;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) and (scripting: enabled) and (min-width: 900px) and (min-height: 660px) {
-  @include cena(':host(:not(.folhas--estatica))');
-}
-
-// Quem pediu menos movimento ao sistema pode ligar a cena por conta própria.
+// A cena só existe com movimento: o componente põe `folhas--ligada` quando a página pode se mexer
+// (pedido do sistema ou escolha da pessoa).
 @media (min-width: 900px) and (min-height: 660px) {
   @include cena(':host(.folhas--ligada:not(.folhas--estatica))');
 }
@@ -196,10 +188,6 @@
   }
 
   .folhas__pilha .folha {
-    font-size: clamp(
-      0.75rem,
-      min(calc((100svh - 12rem) / 38.5), calc((100cqi - 14px) / 31.5)),
-      1rem
-    );
+    font-size: clamp(0.75rem, min(calc((100svh - 12rem) / 38.5), calc(100cqi / 36)), 1rem);
   }
 }

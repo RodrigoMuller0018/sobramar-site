@@ -5,5 +5,11 @@
     <a class="link topo__folhas" href="#folhas">Folhas</a>
     <a class="link" [href]="links.entrar">Entrar</a>
   </nav>
-  <a class="btn btn--primary" [href]="links.comecar">Montar meu carnê</a>
+  <a
+    class="btn btn--pequeno"
+    [class.btn--primary]="comAcao()"
+    [class.btn--secondary]="!comAcao()"
+    [href]="links.comecar"
+    >Montar meu carnê</a
+  >
 </div>

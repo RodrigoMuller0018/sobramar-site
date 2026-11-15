@@ -1,33 +1,57 @@
-// Fixa, opaca e igual em qualquer altura da rolagem: sem blur, sem encolher, sem esconder.
+// Fixa e do mesmo tamanho em qualquer altura da rolagem: sem blur, sem encolher, sem esconder.
+// Sobre a primeira dobra é transparente, para o filme chegar até o alto da tela.
 :host {
   position: fixed;
   inset: 0 0 auto;
   z-index: 10;
   height: var(--nav);
-  border-bottom: 1px solid var(--linha);
-  background: var(--chao);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 200ms var(--saida),
+    border-color 200ms var(--saida);
+}
+
+// Depois da rolagem: fundo noite e uma linha, para o conteúdo passar por baixo sem vazar.
+:host(.nav--pintada) {
+  border-bottom-color: var(--linha);
+  background: var(--campo);
+}
+
+// Sem JavaScript ninguém pinta a barra: ela fica no alto da página e sobe com a rolagem.
+@media (scripting: none) {
+  :host {
+    position: absolute;
+  }
 }
 
 .topo__wrap {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: clamp(16px, 2.4vw, 32px);
   height: 100%;
 }
 
 .marca {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   margin-right: auto;
   color: var(--texto);
-  font: italic 400 1.5rem / 1 var(--fonte-titulo);
-  letter-spacing: -0.02em;
+  font: 400 1.75rem / 1 var(--fonte-titulo);
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 
 .topo__nav {
   display: flex;
-  gap: 24px;
-  font-size: 0.9375rem;
+  gap: clamp(16px, 2.4vw, 32px);
+  font-size: 1rem;
   font-weight: 500;
+
+  // Área de toque maior que o texto, sem mudar o alinhamento.
+  a {
+    padding-block: 10px;
+  }
 }
 
 // O atalho de teclado não empurra a marca: só aparece com foco.
@@ -37,9 +61,9 @@
   left: var(--gut);
   z-index: 1;
   padding: 8px 12px;
-  border-radius: var(--raio);
+  border-radius: var(--raio-p);
   background: var(--texto);
-  color: var(--chao);
+  color: var(--noite);
   clip-path: inset(50%);
 
   &:focus {
@@ -52,12 +76,21 @@
     gap: 12px;
   }
 
+  .marca {
+    font-size: 1.5rem;
+  }
+
   .topo__folhas {
     display: none;
   }
 
   .btn {
     padding: 0 14px;
-    font-size: 0.9375rem;
+  }
+
+  // No celular o botão da barra só aparece quando o da dobra saiu de vista: até lá seria o mesmo
+  // rótulo duas vezes na tela, e a barra fica sem folga em 360 px.
+  :host(:not(.nav--com-acao)) .btn {
+    display: none;
   }
 }

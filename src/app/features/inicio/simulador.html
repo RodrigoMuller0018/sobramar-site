@@ -1,0 +1,69 @@
+<div class="wrap grid simulador__grade">
+  <div class="simulador__texto">
+    <h2 id="titulo-simulador">Antes de comprar, veja o depois</h2>
+    <p class="lead">
+      Digite uma compra no cartão e veja quanto passa a sobrar em cada mês, depois de pagar a
+      parcela. É a casa do exemplo: nada é salvo nem enviado.
+    </p>
+    <form class="simulador" (submit)="$event.preventDefault()">
+      <div class="campo">
+        <label for="valor-da-compra">Valor da compra, em reais</label>
+        <input
+          #campoValor
+          id="valor-da-compra"
+          type="text"
+          inputmode="decimal"
+          autocomplete="off"
+          [value]="valor()"
+          (input)="valor.set(campoValor.value)"
+        />
+      </div>
+      <div class="campo">
+        <label for="vezes">
+          Parcelas: <output for="vezes">{{ vezes() }}</output>
+        </label>
+        <input
+          #campoVezes
+          id="vezes"
+          type="range"
+          min="1"
+          max="12"
+          step="1"
+          [value]="vezes()"
+          (input)="vezes.set(campoVezes.valueAsNumber)"
+        />
+      </div>
+      <p class="simulador__resumo" aria-live="polite">{{ resumo() }}</p>
+    </form>
+  </div>
+
+  <table class="resultado">
+    <caption>
+      Quanto sobra em cada mês: o que entra menos o que sai. A parcela entra na conta do que sai.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Mês</th>
+        <th scope="col">Parcela</th>
+        <th scope="col">Sobra hoje</th>
+        <th scope="col">Sobra com a compra</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (linha of linhas(); track linha.mes; let ordem = $index) {
+        <tr [class.intacto]="!linha.parcela">
+          <th scope="row">{{ linha.nome }}</th>
+          <td class="suave">
+            <span [appTrocaAnimada]="linha.parcela" [ordem]="ordem">{{
+              linha.parcelaEscrita
+            }}</span>
+          </td>
+          <td class="suave">{{ linha.antesEscrito }}</td>
+          <td class="depois">
+            <span [appTrocaAnimada]="linha.depois" [ordem]="ordem">{{ linha.depoisEscrito }}</span>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

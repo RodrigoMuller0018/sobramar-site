@@ -1,34 +1,51 @@
 // Todas as medidas em `em`: quem contém a folha decide o tamanho dela pelo `font-size`.
+// O canhoto âmbar à esquerda, preso no rebite do carnê; o picote separa ele do papel.
 :host {
   position: relative;
-  display: block;
-  container: folha / inline-size;
-  padding: 1.25em clamp(1em, 4vw, 1.5em) 1.4em;
+  display: grid;
+  grid-template-columns: clamp(3.4em, 15%, 5.75em) minmax(0, 1fr);
+  overflow: hidden;
+  border-radius: 1.1em;
   background: var(--papel);
   color: var(--tinta);
-  box-shadow: 0 1.1em 2.5em rgb(0 0 0 / 35%);
+  box-shadow: 0 2.1em 3.75em -1.9em rgb(0 0 0 / 75%);
+}
 
-  // O picote no alto, onde a folha se destaca do canhoto.
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto;
-    border-top: 2px dashed var(--picote);
+.folha__canhoto {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.25em;
+  margin: 0;
+  padding: 1em 0.35em;
+  border-right: 2px dashed var(--linha-do-papel);
+  background: var(--acao);
+  color: var(--sobre-acao);
+  text-align: center;
+
+  b {
+    font: 500 2.25em / 1 var(--fonte-texto);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .folha__rotulo {
+    color: inherit;
   }
 }
 
-.folha__numero,
+.folha__corpo {
+  container: folha / inline-size;
+  min-width: 0;
+  padding: 1.25em clamp(1em, 4vw, 1.5em) 1.4em;
+}
+
 .folha__rotulo,
 .grupo th {
-  color: var(--grafite);
+  color: var(--lapis);
   font-size: 0.75em;
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-}
-
-.folha__numero {
-  margin: 0.25em 0 0.5em;
 }
 
 table {
@@ -51,7 +68,7 @@ caption {
 
 tbody tr:not(.grupo) > * {
   padding: 0.55em 0;
-  border-bottom: 1px solid var(--picote);
+  border-bottom: 1px solid var(--linha-do-papel);
   vertical-align: baseline;
 }
 
@@ -62,7 +79,7 @@ th[scope='row'] {
 
 .detalhe {
   margin-left: 0.6em;
-  color: var(--grafite);
+  color: var(--lapis);
   font-size: 0.8125em;
   font-weight: 400;
 }
@@ -74,14 +91,13 @@ th[scope='row'] {
 }
 
 .valor {
-  font-family: var(--fonte-dados);
   font-size: 0.9375em;
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
 }
 
-// O carimbo de baixa: contorno vermelho, levemente torto, parado.
+// O carimbo de baixa: contorno marinho, levemente torto, parado.
 .carimbo {
   display: inline-block;
   padding: 0.05em 0.45em;
@@ -95,10 +111,10 @@ th[scope='row'] {
   transform: rotate(var(--inclinacao, -3deg));
 }
 
-// A lápis: o valor estimado em grafite, com o motivo escrito na própria linha.
+// A lápis: o valor estimado em ardósia, com o motivo escrito na própria linha.
 .estimada th,
 .estimada td {
-  color: var(--grafite);
+  color: var(--lapis);
 }
 
 .folha__sobra {
@@ -113,13 +129,13 @@ th[scope='row'] {
 }
 
 .folha__estado {
-  color: var(--grafite);
+  color: var(--lapis);
   font-size: 0.8125em;
 }
 
-// A sobra só fica em tinta quando o mês foi conferido; enquanto houver estimativa, é grafite.
+// A sobra só fica em tinta quando o mês foi conferido; enquanto houver estimativa, é a lápis.
 :host(.folha--a-lapis) .folha__sobra strong {
-  color: var(--grafite);
+  color: var(--lapis);
 }
 
 // Papel estreito (celular): o detalhe desce para a linha de baixo, para o valor nunca sair da folha.
@@ -164,4 +180,99 @@ tr:nth-child(6n + 5) .carimbo {
 
 tr:nth-child(6n) .carimbo {
   --inclinacao: -4deg;
+}
+
+// A seção 4: a luz escrita duas vezes no mesmo lugar. A tinta cobre o lápis da esquerda para a
+// direita quando a conta chega; o carimbo bate na baixa. Sem movimento, a troca é seca.
+.duplo {
+  display: inline-grid;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.duplo .lapis {
+  color: var(--lapis);
+}
+
+.duplo .tinta {
+  color: var(--tinta);
+  clip-path: inset(-10% 100% -10% 0);
+}
+
+[data-luz='chegou'],
+[data-luz='pago'] {
+  .duplo .tinta {
+    clip-path: inset(-10% 0 -10% 0);
+  }
+}
+
+.trocas {
+  display: inline-grid;
+
+  > * {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  > .vale {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.carimbo--luz {
+  opacity: 0;
+  transform: rotate(-10deg) scale(1.7);
+}
+
+[data-luz='pago'] .carimbo--luz {
+  opacity: 1;
+  transform: rotate(-3deg) scale(1);
+}
+
+// Com movimento (`:host-context`, como na primeira dobra). Volta: a tinta some em 140 ms e o
+// carimbo sai em 120 ms. Ida: a tinta corre em 280 ms, o valor 90 ms depois do nome, e o carimbo
+// bate em 160 ms.
+:host-context([data-movimento='ligado']) {
+  .duplo .tinta {
+    transition: clip-path 140ms var(--saida);
+  }
+
+  .trocas > * {
+    transition:
+      opacity 120ms linear,
+      visibility 0s linear 120ms;
+  }
+
+  .trocas > .vale {
+    transition:
+      opacity 180ms linear 80ms,
+      visibility 0s;
+  }
+
+  .carimbo--luz {
+    transition:
+      opacity 120ms linear,
+      transform 120ms var(--saida);
+  }
+}
+
+:host-context([data-movimento='ligado']) [data-luz='chegou'],
+:host-context([data-movimento='ligado']) [data-luz='pago'] {
+  .duplo .tinta {
+    transition-duration: 280ms;
+  }
+
+  .valor .duplo .tinta {
+    transition-delay: 90ms;
+  }
+}
+
+:host-context([data-movimento='ligado']) [data-luz='pago'] .carimbo--luz {
+  transition:
+    opacity 90ms linear,
+    transform 160ms var(--saida);
 }

@@ -31,5 +31,13 @@ export function removerMidia(): void {
   Reflect.deleteProperty(window, 'matchMedia');
 }
 
+/** Apaga a escolha de movimento que um teste deixou no navegador de mentira. */
+export function limparMovimento(): void {
+  localStorage.clear();
+  Reflect.deleteProperty(document.documentElement.dataset, 'movimento');
+}
+
 export const MENOS_MOVIMENTO = '(prefers-reduced-motion: reduce)';
 export const CABE_A_CENA = '(min-width: 900px) and (min-height: 660px)';
+/** O arranjo largo da primeira dobra: o filme cobre a tela e o texto fica à esquerda do carnê. */
+export const DOBRA_LARGA = '(min-width: 1240px) and (min-aspect-ratio: 3/2)';

@@ -10,12 +10,13 @@ import {
   inject,
   signal,
   untracked,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { CRIAR_CENA, CenaDeRolagem } from '../../core/movimento/cena-de-rolagem';
 import { MovimentoService } from '../../core/movimento/movimento.service';
 import { MESES_DO_EXEMPLO } from './dominio/exemplo';
-import { estadoDasFolhas, folhaAtiva, progressoDaFolha } from './dominio/virada';
+import { chegadaDaPilha, estadoDasFolhas, folhaAtiva, progressoDaFolha } from './dominio/virada';
 import { Folha } from './folha';
 
 /** A cena só cabe com texto e folha lado a lado e a folha inteira na tela. O CSS usa o mesmo corte. */
@@ -36,7 +37,7 @@ const CABE_A_CENA = '(min-width: 900px) and (min-height: 660px)';
     id: 'folhas',
     class: 'section',
     'aria-labelledby': 'titulo-folhas',
-    '[class.folhas--ligada]': 'movimento.ligado()',
+    '[class.folhas--ligada]': 'movimento.permitido()',
     '[class.folhas--estatica]': 'falhou()',
     '[class.folhas--interativa]': 'interativa()',
   },
@@ -47,6 +48,7 @@ export class Folhas {
   private readonly janela = inject(DOCUMENT).defaultView;
   private readonly destruicao = inject(DestroyRef);
   private readonly papeis = viewChildren('papel', { read: ElementRef<HTMLElement> });
+  private readonly pilha = viewChild.required('pilha', { read: ElementRef<HTMLElement> });
   protected readonly movimento = inject(MovimentoService);
 
   protected readonly folhas = MESES_DO_EXEMPLO.map((mes) => ({
@@ -125,6 +127,9 @@ export class Folhas {
     this.criarCena({
       secao: this.secao.nativeElement,
       aoProgredir: (progresso) => this.aplicar(progresso),
+      aoChegar: (progresso) => {
+        this.pilha().nativeElement.style.transform = chegadaDaPilha(progresso);
+      },
     })
       .then((cena) => {
         this.pedida = false;
@@ -145,22 +150,28 @@ export class Folhas {
     this.cena?.destruir();
     this.cena = null;
     this.naCena.set(false);
+    this.pilha().nativeElement.style.removeProperty('transform');
     for (const papel of this.papeis()) {
       const estilo = papel.nativeElement.style;
       estilo.removeProperty('transform');
+      estilo.removeProperty('filter');
       estilo.removeProperty('opacity');
       estilo.removeProperty('pointer-events');
     }
   }
 
-  /** Só `transform` e `opacity`, direto no elemento: nada de detecção de mudança a cada quadro. */
+  /**
+   * Só `transform`, `filter` e `opacity`, direto no elemento: nada de detecção de mudança a cada
+   * quadro.
+   */
   private aplicar(progresso: number): void {
     const total = this.folhas.length;
     const papeis = this.papeis();
     estadoDasFolhas(progresso, total).forEach((estado, indice) => {
       const estilo = papeis[indice]?.nativeElement.style;
       if (estilo) {
-        estilo.transform = `rotateY(${estado.angulo}deg)`;
+        estilo.transform = estado.transform;
+        estilo.filter = estado.filtro;
         estilo.opacity = String(estado.opacidade);
         estilo.pointerEvents = estado.opacidade < 1 ? 'none' : '';
       }
