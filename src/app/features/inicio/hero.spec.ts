@@ -98,7 +98,10 @@ describe('Hero', () => {
       const hero: HTMLElement = renderizar().nativeElement;
       const retrato = hero.querySelector('source');
 
-      expect(retrato?.getAttribute('srcset')).toBe('hero/carne-retrato.webp');
+      expect(retrato?.getAttribute('srcset')).toBe(
+        'hero/carne-retrato-640.webp 640w, hero/carne-retrato-960.webp 960w, hero/carne-retrato.webp 1080w',
+      );
+      expect(retrato?.getAttribute('sizes')).toBe('(min-width: 1000px) 66vw, 124vw');
       expect(retrato?.getAttribute('media')).toBe(
         'not all and (min-width: 1240px) and (min-aspect-ratio: 3/2)',
       );
@@ -402,6 +405,10 @@ describe('Hero', () => {
       expect(hero.querySelector('img')?.getAttribute('src')).toBe('hero/definitivo-fim.webp');
       expect(hero.querySelector('img')?.getAttribute('width')).toBe('1920');
       expect(hero.querySelector('img')?.getAttribute('alt')).toBe('O carnê definitivo');
+      // Sem larguras menores, o retrato vai inteiro.
+      expect(hero.querySelector('source')?.getAttribute('srcset')).toBe(
+        'hero/definitivo-retrato.webp 1080w',
+      );
 
       filme(fixture).dispatchEvent(new Event('playing'));
       vi.advanceTimersByTime(2999);

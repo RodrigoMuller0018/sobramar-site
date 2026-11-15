@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { LINKS_DO_APP } from '../../core/config/urls';
 import { MovimentoService } from '../../core/movimento/movimento.service';
-import { ATIVO_DO_HERO } from './ativo-do-hero';
+import { ATIVO_DO_HERO, srcsetDe } from './ativo-do-hero';
 import { MESES_DO_EXEMPLO, MesDoExemplo, emReais, sobraCentavos } from './dominio/exemplo';
 import { profundidade } from './dominio/profundidade';
 
@@ -50,6 +50,7 @@ export class Hero {
 
   protected readonly links = inject(LINKS_DO_APP);
   protected readonly ativo = inject(ATIVO_DO_HERO);
+  protected readonly srcsetDoRetrato = srcsetDe(this.ativo.retrato);
   protected readonly movimento = inject(MovimentoService);
   protected readonly fato = fatoDoExemplo();
 

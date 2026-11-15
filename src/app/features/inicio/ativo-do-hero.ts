@@ -4,6 +4,15 @@ export interface ImagemDoHero {
   readonly url: string;
   readonly largura: number;
   readonly altura: number;
+  /** A mesma imagem em larguras menores, para o celular não baixar mais pixels do que mostra. */
+  readonly menores?: readonly { readonly url: string; readonly largura: number }[];
+}
+
+/** O `srcset` da imagem: as larguras menores e a cheia, cada uma com a sua largura em pixels. */
+export function srcsetDe(imagem: ImagemDoHero): string {
+  return [...(imagem.menores ?? []), imagem]
+    .map(({ url, largura }) => `${url} ${largura}w`)
+    .join(', ');
 }
 
 /**
@@ -32,7 +41,15 @@ const CARNE_DO_BLENDER: AtivoDoHero = {
   filme: 'hero/carne-abertura.mp4',
   quadroInicial: 'hero/carne-inicio.webp',
   quadroFinal: { url: 'hero/carne-fim.webp', largura: 1600, altura: 900 },
-  retrato: { url: 'hero/carne-retrato.webp', largura: 1080, altura: 1350 },
+  retrato: {
+    url: 'hero/carne-retrato.webp',
+    largura: 1080,
+    altura: 1350,
+    menores: [
+      { url: 'hero/carne-retrato-640.webp', largura: 640 },
+      { url: 'hero/carne-retrato-960.webp', largura: 960 },
+    ],
+  },
   textoEntraEm: 1.35,
   descricao:
     'Carnê de doze folhas aberto em leque; a folha de maio de 2027, com sobra de R$ 2.680,10, flutua acima das outras',
