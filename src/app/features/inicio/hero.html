@@ -46,7 +46,8 @@
     <picture>
       <source
         media="not all and (min-width: 1240px) and (min-aspect-ratio: 3/2)"
-        [attr.srcset]="ativo.retrato.url"
+        [attr.srcset]="srcsetDoRetrato"
+        sizes="(min-width: 1000px) 66vw, 124vw"
         [attr.width]="ativo.retrato.largura"
         [attr.height]="ativo.retrato.altura"
       />
